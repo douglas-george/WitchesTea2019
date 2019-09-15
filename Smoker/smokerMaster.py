@@ -15,3 +15,7 @@ class SmokerMaster():
             data = s.recv(1024)
 
         print('Received', repr(data))
+
+
+if __name__ == "__main__":
+    print("hello")
