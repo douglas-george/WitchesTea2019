@@ -30,7 +30,13 @@ class GadgetMessage():
             try:
                 _beforeStr, starting_tag, tag_value, closing_tag, after_str = parse("{}<{}>{}</{}>{}", string_to_parse)
             except TypeError:
-                if "MESSAGE_ID" not in self.data:
+                if "MESSAGE_TYPE" not in self.data:
+                    return False, after_msg_str.strip()
+                elif "GADGET_ID" not in self.data:
+                    return False, after_msg_str.strip()
+                elif "MESSAGE_ID" not in self.data:
+                    return False, after_msg_str.strip()
+                elif "MESSAGE_COUNT" not in self.data:
                     return False, after_msg_str.strip()
                 else:
                     return True, after_msg_str.strip()
@@ -44,11 +50,22 @@ class GadgetMessage():
 
 
 class GadgetHeartbeat(GadgetMessage):
-    def __init__(self, gadget_id, heartbeat_id):
+    def __init__(self, gadget_id, message_id, message_count):
         super().__init__()
-        self.data["MESSAGE_ID"] = "HEARTBEAT"
+        self.data["MESSAGE_TYPE"] = "GADGET_HEARTBEAT"
         self.data["GADGET_ID"] = str(gadget_id)
-        self.data["HEARTBEAT_ID"] = str(heartbeat_id)
+        self.data["MESSAGE_ID"] = str(message_id)
+        self.data["MESSAGE_COUNT"] = str(message_count)
+
+
+class GameHeartbeat(GadgetMessage):
+    def __init__(self, gadget_id, message_id, message_count, gameState):
+        super().__init__()
+        self.data["MESSAGE_TYPE"] = "GAME_HEARTBEAT"
+        self.data["GADGET_ID"] = str(gadget_id)
+        self.data["MESSAGE_ID"] = str(message_id)
+        self.data["MESSAGE_COUNT"] = str(message_count)
+        self.data["GAME_STATE"] = str(gameState)
 
 
 if __name__ == "__main__":

@@ -2,12 +2,16 @@ import socket
 import time
 from GadgetMessage import GadgetHeartbeat
 
-class ClientLink():
-    def __init__(self, hostAddress, hostPort, heartbeatRate, clientId):
-        self.hostAddress = hostAddress
-        self.hostPort = hostPort
-        self.heartbeatRate = heartbeatRate
-        self.clientId = clientId
+
+class GadgetTransmitterLink:
+    """
+    The GadgetTransmitterLink's job is to transmit a gadget's messages to a ServerListenerLink
+    """
+    def __init__(self, host_address, host_port, heartbeat_rate, client_id):
+        self.hostAddress = host_address
+        self.hostPort = host_port
+        self.heartbeatRate = heartbeat_rate
+        self.clientId = client_id
 
         self.timeOfLastHeartbeat = time.time()
         self.heartbeatId = 0
@@ -29,7 +33,7 @@ class ClientLink():
 
 
 if __name__ == "__main__":
-    client = ClientLink(hostAddress="192.168.5.177", hostPort=10101, heartbeatRate=5.0, clientId="Smoker")
+    client = GadgetTransmitterLink(host_address="192.168.5.177", host_port=10101, heartbeat_rate=5.0, client_id="Smoker")
 
     while True:
         client.service_client()

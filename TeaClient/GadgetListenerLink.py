@@ -2,17 +2,21 @@ import socket
 from GadgetMessage import GadgetMessage
 
 
-class ServerLink():
-    def __init__(self, hostIP, hostPort):
-        self.hostIP = hostIP
-        self.hostPort = hostPort
+class GadgetListenerLink:
+    """
+    The job of the GadgetListenerLink is to listen on a port for broadcasts from the Announcer.
+    """
 
+    ANNOUNCEMENT_BCAST_ADDR = "255.255.255.255"
+    ANNOUNCEMENT_PORT = 10102
+
+    def __init__(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind((self.hostIP, self.hostPort))
+        self.socket.bind((self.ANNOUNCEMENT_BCAST_ADDR, self.ANNOUNCEMENT_PORT))
 
         self.message_being_received = GadgetMessage()
 
-    def service_server(self):
+    def service_gadget_listener(self):
         return_data = self.socket.recv(1024).decode("utf-8")
 
         if len(return_data) > 0:
@@ -28,14 +32,11 @@ class ServerLink():
         return None
 
 
-
-
-
 if __name__ == "__main__":
-    server = ServerLink(hostIP="192.168.5.177", hostPort=10101)
+    server = GadgetListenerLink()
 
     while True:
-        newMessage = server.service_server()
+        newMessage = server.service_gadget_listener()
 
         if newMessage is not None:
             print(newMessage.encode())

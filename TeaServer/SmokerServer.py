@@ -1,8 +1,8 @@
 
-from TeaServer.ServerLink import ServerLink
+from TeaServer.ServerListenerLink import ServerListenerLink
 
 class SmokerServer():
     SERVER_PORT = 10101
 
     def __init__(self):
-        self.link = ServerLink(hostPort=self.SERVER_PORT)
+        self.link = ServerListenerLink(hostPort=self.SERVER_PORT)
