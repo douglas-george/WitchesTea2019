@@ -22,69 +22,76 @@ class TheDarkPoison:
     def __init__(self):
         self.root = tkinter.Tk()
 
-        # ----------------------- column 0 -------------------------------------
-        # wand status lines
-        self.wandFrame = tkinter.Frame(self.root)
-        self.wandFrame.grid(row=0, column=0)
+        columnWidth = 400
+        columnHeight = 750
 
-        self.wandLabel = tkinter.Label(self.wandFrame, text="Wand Status", borderwidth=2, relief="groove", width=48)
+
+        # ----------------------- column 0 - wand status lines-------------------------------------
+        self.column0 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
+        self.column0.grid_propagate(0)
+        self.column0.grid(row=0, column=0)
+
+        # row 0
+        self.wandLabel = tkinter.Label(self.column0, text="Wand Status", borderwidth=2, relief="groove", width=48)
         self.wandLabel.grid(row=0, column=0, columnspan=3)
 
+        # remaining rows
         self.wandGuiLines = []
         for index, attendee in enumerate(attendees):
-            newWand = GadgetStatus(gadget_name=attendee + "'s Wand" , index=(index + 1), root=self.wandFrame,
+            newWand = GadgetStatus(gadget_name=attendee + "'s Wand" , index=(index + 1), root=self.column0,
                                    time_since_last_heartbeat=100.0)
             self.wandGuiLines.append(newWand)
 
-        # empty row
-        self.root.grid_rowconfigure(1, minsize=15)
-
-        # smoker status line
-        self.smokerFrame = tkinter.Frame(self.root)
-        self.smokerFrame.grid(row=2, column=0)
-        self.smokerLabel = tkinter.Label(self.smokerFrame, text="Smoker Status", borderwidth=2, relief="groove",
-                                         width=48)
-        self.smokerLabel.grid(row=0, column=0, columnspan=3)
-        self.smokerStatus = GadgetStatus(gadget_name="Smoker", index=1, root=self.smokerFrame,
-                                         time_since_last_heartbeat=100.0)
-
-        # empty row
-        self.root.grid_rowconfigure(3, minsize=15)
-
-        # Regina in the Fireplace line
-        self.ReginaFireplaceFrame = tkinter.Frame(self.root)
-        self.ReginaFireplaceFrame.grid(row=4, column=0)
-        self.ReginaFireplaceLabel = tkinter.Label(self.ReginaFireplaceFrame, text="Regina in Fireplace Status",
-                                                  borderwidth=2, relief="groove", width=48)
-        self.ReginaFireplaceLabel.grid(row=0, column=0, columnspan=3)
-        self.ReginaFireplaceStatus = GadgetStatus(gadget_name="Regina", index=1, root=self.ReginaFireplaceFrame,
-                                                  time_since_last_heartbeat=100.0)
-
-        # empty row
-        self.root.grid_rowconfigure(5, minsize=15)
-
-        # Speakers line
-        self.SpeakersFrame = tkinter.Frame(self.root)
-        self.SpeakersFrame.grid(row=6, column=0)
-        self.SpeakersLabel = tkinter.Label(self.SpeakersFrame, text="Speaker Status",
-                                           borderwidth=2, relief="groove", width=48)
-        self.SpeakersLabel.grid(row=0, column=0, columnspan=3)
-        self.SpeakerStatus = GadgetStatus(gadget_name="Speakers", index=1, root=self.SpeakersFrame,
-                                          time_since_last_heartbeat=100.0)
-
-        # ----------------------- column 1 -------------------------------------
+        # ----------------------- column 1 - empty column -------------------------------------
         self.root.grid_columnconfigure(1, minsize=30)
 
-        # ----------------------- column 2 -------------------------------------
-        self.gameStatusFrame = tkinter.Frame(self.root)
-        self.gameStatusFrame.grid(row=0, column=2)
+        # ----------------------- column 2 - Other gadgets -------------------------------------
+        self.column2 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
+        self.column2.grid_propagate(0)
+        self.column2.grid(row=0, column=2)
 
-        self.gameStatusLabel = tkinter.Label(self.gameStatusFrame, text="Game Status", borderwidth=2, relief="groove", width=80)
+        # rows 0 & 1: smoker status line
+        self.smokerLabel = tkinter.Label(self.column2, text="Smoker Status", borderwidth=2, relief="groove",
+                                         width=48)
+        self.smokerLabel.grid(row=0, column=0, columnspan=3)
+        self.smokerStatus = GadgetStatus(gadget_name="Smoker", index=1, root=self.column2,
+                                         time_since_last_heartbeat=100.0)
+
+        # row 2: empty
+        self.column2.grid_rowconfigure(2, minsize=15)
+
+        # rows 3 & 4: Regina in the Fireplace line
+        self.ReginaFireplaceLabel = tkinter.Label(self.column2, text="Regina in Fireplace Status",
+                                                  borderwidth=2, relief="groove", width=48)
+        self.ReginaFireplaceLabel.grid(row=3, column=0, columnspan=3)
+        self.ReginaFireplaceStatus = GadgetStatus(gadget_name="Regina", index=4, root=self.column2,
+                                                  time_since_last_heartbeat=100.0)
+
+        # row 5: empty
+        self.column2.grid_rowconfigure(5, minsize=15)
+
+        # rows 6 & 7: Speakers line
+        self.SpeakersLabel = tkinter.Label(self.column2, text="Speaker Status",
+                                           borderwidth=2, relief="groove", width=48)
+        self.SpeakersLabel.grid(row=7, column=0, columnspan=3)
+        self.SpeakerStatus = GadgetStatus(gadget_name="Speakers", index=8, root=self.column2,
+                                          time_since_last_heartbeat=100.0)
+
+        # ----------------------- column 3 -------------------------------------
+        # empty column
+        self.root.grid_columnconfigure(3, minsize=30)
+
+        # ----------------------- column 4 - game status -------------------------------------
+        self.column4 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
+        self.column4.grid_propagate(0)
+        self.column4.grid(row=0, column=4)
+
+        self.gameStatusLabel = tkinter.Label(self.column4, text="Game Status", borderwidth=2, relief="groove", width=80)
         self.gameStatusLabel.grid(row=0, column=0, columnspan=3)
 
         self.gameStatusLines = {}
         for index, statusEntry in enumerate(self.game_states):
-            newGameState = GameState(state_name=statusEntry, index=(index + 1), root=self.gameStatusFrame)
+            newGameState = GameState(state_name=statusEntry, index=(index + 1), root=self.column4)
             self.gameStatusLines[statusEntry] = newGameState
 
 
