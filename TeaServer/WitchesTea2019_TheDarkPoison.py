@@ -12,15 +12,18 @@ attendees = ["Dennis", "Delta",
 
 
 class TheDarkPoison:
-    game_states = ("WAITING_TO_START",
-                   "AT_ATTENTION",
-                   "SMOKING",
-                   "REGINA'S WARNING",
-                   "WANDS AT THE READY")
+    game_states = (("WAITING_TO_START", "Waiting for guests to arrive, gadgets asleep, checking in occasionally."),
+                   ("AT_ATTENTION", "Eating dinner, gadgets frequently checking in."),
+                   ("SMOKING", "The smoker is actively smoking, Asmodean's audio clip is playing"),
+                   ("REGINAS WARNING", "Regina's audio clip is playing"),
+                   ("WANDS AT THE READY", "Wands buzz, Regina's next clip plays"),
+                   ("CHECK FOR POISONING", "Everyone eats dessert #1"))
 
 
     def __init__(self):
         self.root = tkinter.Tk()
+
+        self.index_of_current_state = 0
 
         columnWidth = 400
         columnHeight = 750
@@ -45,7 +48,7 @@ class TheDarkPoison:
         # ----------------------- column 1 - empty column -------------------------------------
         self.root.grid_columnconfigure(1, minsize=30)
 
-        # ----------------------- column 2 - Other gadgets -------------------------------------
+        # ----------------------- column 2 - Other gadgets, current state description -------------------------------------
         self.column2 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
         self.column2.grid_propagate(0)
         self.column2.grid(row=0, column=2)
@@ -77,36 +80,150 @@ class TheDarkPoison:
         self.SpeakerStatus = GadgetStatus(gadget_name="Speakers", index=8, root=self.column2,
                                           time_since_last_heartbeat=100.0)
 
+        # rows 8,9: empty
+        self.column2.grid_rowconfigure(8, minsize=45)
+        self.column2.grid_rowconfigure(9, minsize=45)
+
+
+        # rows 10 & 11: Current State Description
+        self.CurrentStateLabel = tkinter.Label(self.column2, text="Current State Description",
+                                               borderwidth=2, relief="groove", width=48)
+        self.CurrentStateLabel.grid(row=10, column=0, columnspan=3)
+
+        self.CurrentStateDescription = tkinter.Text(self.column2, height=12, width=40)
+
+        self.CurrentStateDescription.insert(tkinter.END, """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum""")
+
+        self.CurrentStateDescription.grid(row=11, column=0, columnspan=3)
+
+        # row 12: empty
+        self.column2.grid_rowconfigure(12, minsize=45)
+
+        # rows 13 & 14: Next State Description
+        self.NextStateLabel = tkinter.Label(self.column2, text="Next State Description",
+                                               borderwidth=2, relief="groove", width=48)
+        self.NextStateLabel.grid(row=13, column=0, columnspan=3)
+
+        self.NextStateDescription = tkinter.Text(self.column2, height=12, width=40)
+
+        self.NextStateDescription.insert(tkinter.END, """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum""")
+
+        self.NextStateDescription.grid(row=14, column=0, columnspan=3)
+
         # ----------------------- column 3 -------------------------------------
         # empty column
         self.root.grid_columnconfigure(3, minsize=30)
 
-        # ----------------------- column 4 - game status -------------------------------------
+        # ----------------------- column 4 - game status and control -------------------------------------
         self.column4 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
         self.column4.grid_propagate(0)
         self.column4.grid(row=0, column=4)
 
-        self.gameStatusLabel = tkinter.Label(self.column4, text="Game Status", borderwidth=2, relief="groove", width=80)
+        self.gameStatusLabel = tkinter.Label(self.column4, text="Game Status", borderwidth=2, relief="groove", width=48)
         self.gameStatusLabel.grid(row=0, column=0, columnspan=3)
 
-        self.gameStatusLines = {}
+        self.gameStatusLines = []
         for index, statusEntry in enumerate(self.game_states):
-            newGameState = GameState(state_name=statusEntry, index=(index + 1), root=self.column4)
-            self.gameStatusLines[statusEntry] = newGameState
+            name_of_state = statusEntry[0]
+            newGameState = GameState(state_name=name_of_state, index=(index + 1), root=self.column4, status=GameState.GAME_STATE_PENDING)
+            self.gameStatusLines.append(newGameState)
 
+        self.column4.grid_rowconfigure(len(self.gameStatusLines) + 2, minsize=45)
+
+        self.backButton = tkinter.Button(self.column4, bd=2, command=self.back_button, text="Go Back", anchor="nw")
+        self.backButton.grid(row=len(self.gameStatusLines) + 3, column=0)
+
+        self.startStopButton = tkinter.Button(self.column4, bd=2, command=self.go_stop_button, text="Go!!!", anchor="nw")
+        self.startStopButton.grid(row=len(self.gameStatusLines) + 3, column=1)
+        self.goButtonEnabled = True
+
+        self.forwardButton = tkinter.Button(self.column4, bd=2, command=self.forward_button, text="Go Forward", anchor="nw")
+        self.forwardButton.grid(row=len(self.gameStatusLines) + 3, column=2)
+
+        self.update_current_state(index_of_new_state=0)
 
         self.root.mainloop()
 
+    def back_button(self):
+        self.update_current_state(index_of_new_state=self.index_of_current_state - 1)
+
+    def go_stop_button(self):
+        if self.goButtonEnabled:
+            self.startStopButton.config(text="Pause...")
+            self.goButtonEnabled = False
+
+            self.backButton.config(state="disabled")
+            self.forwardButton.config(state="disabled")
+
+        else:
+            self.startStopButton.config(text="Go!!!")
+            self.goButtonEnabled = True
+
+            self.backButton.config(state="normal")
+            self.forwardButton.config(state="normal")
+
+    def forward_button(self):
+        self.update_current_state(index_of_new_state=self.index_of_current_state + 1)
+
+    def update_current_state(self, index_of_new_state):
+        if index_of_new_state < 0:
+            self.index_of_current_state = 0
+        elif index_of_new_state >= len(self.game_states):
+            self.index_of_current_state = len(self.game_states) - 1
+        else:
+            self.index_of_current_state = index_of_new_state
+
+        for i, gameStatusLine in enumerate(self.gameStatusLines):
+            if i < self.index_of_current_state:
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_PENDING)
+            elif i == self.index_of_current_state:
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_ACTIVE)
+            else:
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_DONE)
+
+        self.CurrentStateDescription.delete('1.0', tkinter.END)
+        self.NextStateDescription.delete('1.0', tkinter.END)
+
+        self.CurrentStateDescription.insert(tkinter.END, self.game_states[self.index_of_current_state][1])
+        if (self.index_of_current_state + 1) < len(self.game_states):
+            self.NextStateDescription.insert(tkinter.END, self.game_states[self.index_of_current_state + 1][1])
+        else:
+            self.NextStateDescription.insert(tkinter.END, "")
+
 
 class GameState:
-    def __init__(self, state_name, index, root):
+    GAME_STATE_DONE = "DONE"
+    GAME_STATE_ACTIVE = "ACTIVE"
+    GAME_STATE_PENDING = "PENDING"
+
+    def __init__(self, state_name, index, root, status):
         self.state_name = state_name
         self.index = index
         self.root = root
+        self.status = status
 
         self.state_name_text = tkinter.Label(root, text=state_name, borderwidth=2, relief="groove", width=45,
                                             anchor="nw")
-        self.state_name_text.grid(row=self.index, column=0)
+        self.state_name_text.grid(row=self.index, column=0, columnspan=3)
+
+        self.format_row_based_on_status()
+
+    def update_status(self, new_status):
+        self.status = new_status
+        self.format_row_based_on_status()
+
+    def format_row_based_on_status(self):
+
+        if self.status == self.GAME_STATE_DONE:
+            self.state_name_text.config({"background": "#96EAFF", "foreground": "#20ABDA"})
+
+        elif self.status == self.GAME_STATE_ACTIVE:
+            self.state_name_text.config({"background": "#00FF0A"})
+
+        else:
+            self.state_name_text.config({"background": "#FFFFA0"})
+
+
 
 
 class GadgetStatus:
