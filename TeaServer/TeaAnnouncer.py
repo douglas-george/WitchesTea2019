@@ -8,7 +8,7 @@ class TeaAnnouncer:
     The TeaAnnouncer's job is to periodically broadcast the current game status.
     """
     ANNOUNCEMENT_BCAST_ADDR = "255.255.255.255"
-    ANNOUNCEMENT_PORT = 10102
+    ANNOUNCEMENT_PORT = 10103
 
     def __init__(self, time_between_heartbeats, current_game_state):
         self.time_of_last_heartbeat = time.time()
@@ -19,12 +19,14 @@ class TeaAnnouncer:
         self.gadget_id = "ANNOUNCER"
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #self.socket.bind((self.ANNOUNCEMENT_BCAST_ADDR, self.ANNOUNCEMENT_PORT))     do I need this?
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     def update_state(self, new_game_state):
-        self.current_game_state = new_game_state
-        self.current_message_id += 1
-        self.current_message_count = 0
+        if new_game_state != self.current_game_state:
+            self.current_game_state = new_game_state
+            self.current_message_id += 1
+            self.current_message_count = 0
 
     def service(self):
         current_time = time.time()
@@ -38,4 +40,5 @@ class TeaAnnouncer:
             self.socket.sendto(bytearray(heartbeat.encode(), 'utf-8'), (self.ANNOUNCEMENT_BCAST_ADDR,
                                                                         self.ANNOUNCEMENT_PORT))
 
+            self.current_message_count += 1
             self.time_of_last_heartbeat = current_time

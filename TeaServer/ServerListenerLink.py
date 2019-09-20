@@ -6,29 +6,55 @@ class ServerListenerLink:
     """
     The job of the ServerListenerLink is to listen on a port for incoming data from a gadget.
     """
-    def __init__(self, hostIP, hostPort):
-        self.hostIP = hostIP
-        self.hostPort = hostPort
+
+    GADGET_BCAST_ADDR = "255.255.255.255"
+
+    def __init__(self, gadget_port):
+        self.gadget_port = gadget_port
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind((self.hostIP, self.hostPort))
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.setblocking(0)
+        self.socket.bind(('', self.gadget_port))
 
         self.message_being_received = GadgetMessage()
 
     def service_server(self):
-        return_data = self.socket.recv(1024).decode("utf-8")
+        while True:
+            try:
+                return_data = self.socket.recv(1024).decode("utf-8")
+            except BlockingIOError:
+                break
 
-        if len(return_data) > 0:
-            new_message_available, trailing_data = self.message_being_received.decode(new_data=return_data)
+            if len(return_data) > 0:
+                new_message_available, trailing_data = self.message_being_received.decode(new_data=return_data)
 
-            if new_message_available:
-                newMessage = self.message_being_received
-                self.message_being_received = GadgetMessage()
-                self.message_being_received.decode(new_data=trailing_data)
+                if new_message_available:
+                    newMessage = self.message_being_received
+                    self.message_being_received = GadgetMessage()
+                    self.message_being_received.decode(new_data=trailing_data)
 
-                return newMessage
+                    return newMessage
 
         return None
+
+
+class SmokerListener(ServerListenerLink):
+    SMOKER_PORT = 10108
+
+    def __init__(self):
+        super().__init__(gadget_port=self.SMOKER_PORT)
+
+    def service_smoker(self):
+        msg = self.service_server()
+
+        if msg is not None:
+            if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT") and (msg.data["GADGET_ID"] == "SMOKER"):
+                return (msg.data["MESSAGE_ID"], msg.data["GADGET_STATE"])
+
+        return None
+
+
 
 
 if __name__ == "__main__":

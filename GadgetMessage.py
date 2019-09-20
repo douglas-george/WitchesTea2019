@@ -36,8 +36,6 @@ class GadgetMessage():
                     return False, after_msg_str.strip()
                 elif "MESSAGE_ID" not in self.data:
                     return False, after_msg_str.strip()
-                elif "MESSAGE_COUNT" not in self.data:
-                    return False, after_msg_str.strip()
                 else:
                     return True, after_msg_str.strip()
 
@@ -50,12 +48,12 @@ class GadgetMessage():
 
 
 class GadgetHeartbeat(GadgetMessage):
-    def __init__(self, gadget_id, message_id, message_count):
+    def __init__(self, gadget_id, heartbeat_id, gadget_state):
         super().__init__()
         self.data["MESSAGE_TYPE"] = "GADGET_HEARTBEAT"
         self.data["GADGET_ID"] = str(gadget_id)
-        self.data["MESSAGE_ID"] = str(message_id)
-        self.data["MESSAGE_COUNT"] = str(message_count)
+        self.data["MESSAGE_ID"] = str(heartbeat_id)
+        self.data["GADGET_STATE"] = str(gadget_state)
 
 
 class GameHeartbeat(GadgetMessage):

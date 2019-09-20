@@ -1,25 +1,9 @@
 import tkinter
-from TeaServer.SmokerServer import SmokerServer
-
-attendees = ["Dennis", "Delta",
-             "Bill", "Kali", "Jaron", "Ammon", "Devor",
-             "Marika", "Alexis", "Amber", "Isaac",
-             "Jessica", "Doug", "Gabriel",
-             "Joe", "Barbara", "Carl",
-             "Alice", "Jeff", "Braeden", "Carter", "Tanner", "Coleman", "Brynlee",
-             "Sam", "Erin", "Sariah", "Emma", "Hyrum",
-             "Courtney", "Hannah", "Luke"]
+from TeaScript import attendees
+from TeaScript import game_states
 
 
-class TheDarkPoison:
-    game_states = (("WAITING_TO_START", "Waiting for guests to arrive, gadgets asleep, checking in occasionally."),
-                   ("AT_ATTENTION", "Eating dinner, gadgets frequently checking in."),
-                   ("SMOKING", "The smoker is actively smoking, Asmodean's audio clip is playing"),
-                   ("REGINAS WARNING", "Regina's audio clip is playing"),
-                   ("WANDS AT THE READY", "Wands buzz, Regina's next clip plays"),
-                   ("CHECK FOR POISONING", "Everyone eats dessert #1"))
-
-
+class GameRunnerGui:
     def __init__(self):
         self.root = tkinter.Tk()
 
@@ -27,7 +11,6 @@ class TheDarkPoison:
 
         columnWidth = 400
         columnHeight = 750
-
 
         # ----------------------- column 0 - wand status lines-------------------------------------
         self.column0 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
@@ -123,7 +106,7 @@ class TheDarkPoison:
         self.gameStatusLabel.grid(row=0, column=0, columnspan=3)
 
         self.gameStatusLines = []
-        for index, statusEntry in enumerate(self.game_states):
+        for index, statusEntry in enumerate(game_states):
             name_of_state = statusEntry[0]
             newGameState = GameState(state_name=name_of_state, index=(index + 1), root=self.column4, status=GameState.GAME_STATE_PENDING)
             self.gameStatusLines.append(newGameState)
@@ -142,7 +125,8 @@ class TheDarkPoison:
 
         self.update_current_state(index_of_new_state=0)
 
-        self.root.mainloop()
+    def service(self):
+        self.root.update()
 
     def back_button(self):
         self.update_current_state(index_of_new_state=self.index_of_current_state - 1)
@@ -168,8 +152,8 @@ class TheDarkPoison:
     def update_current_state(self, index_of_new_state):
         if index_of_new_state < 0:
             self.index_of_current_state = 0
-        elif index_of_new_state >= len(self.game_states):
-            self.index_of_current_state = len(self.game_states) - 1
+        elif index_of_new_state >= len(game_states):
+            self.index_of_current_state = len(game_states) - 1
         else:
             self.index_of_current_state = index_of_new_state
 
@@ -184,11 +168,15 @@ class TheDarkPoison:
         self.CurrentStateDescription.delete('1.0', tkinter.END)
         self.NextStateDescription.delete('1.0', tkinter.END)
 
-        self.CurrentStateDescription.insert(tkinter.END, self.game_states[self.index_of_current_state][1])
-        if (self.index_of_current_state + 1) < len(self.game_states):
-            self.NextStateDescription.insert(tkinter.END, self.game_states[self.index_of_current_state + 1][1])
+        self.CurrentStateDescription.insert(tkinter.END, game_states[self.index_of_current_state][1])
+        if (self.index_of_current_state + 1) < len(game_states):
+            self.NextStateDescription.insert(tkinter.END, game_states[self.index_of_current_state + 1][1])
         else:
             self.NextStateDescription.insert(tkinter.END, "")
+
+    def get_index_of_current_state(self):
+        return self.index_of_current_state
+
 
 
 class GameState:
@@ -222,8 +210,6 @@ class GameState:
 
         else:
             self.state_name_text.config({"background": "#FFFFA0"})
-
-
 
 
 class GadgetStatus:
@@ -268,7 +254,7 @@ class GadgetStatus:
 
 
 if __name__ == "__main__":
-    game = TheDarkPoison()
+    game = GameRunnerGui()
 
 
 
