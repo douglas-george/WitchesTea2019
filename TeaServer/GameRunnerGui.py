@@ -1,6 +1,7 @@
 import tkinter
-from TeaScript import attendees
-from TeaScript import game_states
+import time
+from TeaServer.TeaScript import attendees
+from TeaServer.TeaScript import game_states
 
 
 class GameRunnerGui:
@@ -24,8 +25,8 @@ class GameRunnerGui:
         # remaining rows
         self.wandGuiLines = []
         for index, attendee in enumerate(attendees):
-            newWand = GadgetStatus(gadget_name=attendee + "'s Wand" , index=(index + 1), root=self.column0,
-                                   time_since_last_heartbeat=100.0)
+            newWand = GadgetStatus(gadget_name=attendee, index=(index + 1), root=self.column0,
+                                   time_of_last_heartbeat=time.time())
             self.wandGuiLines.append(newWand)
 
         # ----------------------- column 1 - empty column -------------------------------------
@@ -41,7 +42,7 @@ class GameRunnerGui:
                                          width=48)
         self.smokerLabel.grid(row=0, column=0, columnspan=3)
         self.smokerStatus = GadgetStatus(gadget_name="Smoker", index=1, root=self.column2,
-                                         time_since_last_heartbeat=100.0)
+                                         time_of_last_heartbeat=time.time())
 
         # row 2: empty
         self.column2.grid_rowconfigure(2, minsize=15)
@@ -51,7 +52,7 @@ class GameRunnerGui:
                                                   borderwidth=2, relief="groove", width=48)
         self.ReginaFireplaceLabel.grid(row=3, column=0, columnspan=3)
         self.ReginaFireplaceStatus = GadgetStatus(gadget_name="Regina", index=4, root=self.column2,
-                                                  time_since_last_heartbeat=100.0)
+                                                  time_of_last_heartbeat=time.time())
 
         # row 5: empty
         self.column2.grid_rowconfigure(5, minsize=15)
@@ -61,7 +62,7 @@ class GameRunnerGui:
                                            borderwidth=2, relief="groove", width=48)
         self.SpeakersLabel.grid(row=7, column=0, columnspan=3)
         self.SpeakerStatus = GadgetStatus(gadget_name="Speakers", index=8, root=self.column2,
-                                          time_since_last_heartbeat=100.0)
+                                          time_of_last_heartbeat=time.time())
 
         # rows 8,9: empty
         self.column2.grid_rowconfigure(8, minsize=45)
@@ -126,6 +127,14 @@ class GameRunnerGui:
         self.update_current_state(index_of_new_state=0)
 
     def service(self):
+        for wandGuiLine in self.wandGuiLines:
+            wandGuiLine.update_time_box()
+            wandGuiLine.update_row_color()
+
+        self.smokerStatus.update_row_color()
+        self.ReginaFireplaceStatus.update_row_color()
+        self.SpeakerStatus.update_row_color()
+
         self.root.update()
 
     def back_button(self):
@@ -177,6 +186,17 @@ class GameRunnerGui:
     def get_index_of_current_state(self):
         return self.index_of_current_state
 
+    def update_wand_status(self, message_id, wand_id, wand_state):
+        if wand_id not in attendees:
+            print("got unidentified wand heartbeat {}, {}, {}".format(message_id, wand_id, wand_state))
+            return
+
+        for wandGuiLine in self.wandGuiLines:
+            if wandGuiLine.gadget_name == wand_id:
+                wandGuiLine.heartbeat_received()
+                wandGuiLine.update_row_status(new_status=wand_state)
+                break
+
 
 
 class GameState:
@@ -213,32 +233,32 @@ class GameState:
 
 
 class GadgetStatus:
-    def __init__(self, gadget_name, index, root, time_since_last_heartbeat):
+    def __init__(self, gadget_name, index, root, time_of_last_heartbeat):
         self.gadget_name = gadget_name
         self.index = index
         self.root = root
-        self.time_since_last_heartbeat = time_since_last_heartbeat
+        self.time_of_last_heartbeat = time_of_last_heartbeat
 
-        self.wand_name_text = tkinter.Label(root, text=gadget_name, borderwidth=2, relief="groove", width=15, anchor="nw")
+        self.wand_name_text = tkinter.Label(root, text=gadget_name + "'s Wand", borderwidth=2, relief="groove", width=15, anchor="nw")
         self.wand_name_text.grid(row=self.index, column=0)
 
         self.wand_status_text = tkinter.Label(root, text="uninitialized", borderwidth=2, relief="groove", width=15, anchor="nw")
         self.wand_status_text.grid(row=self.index, column=1)
 
-        self.wand_time_text = tkinter.Label(root, text=round(time_since_last_heartbeat, 0), borderwidth=2, relief="groove", width=15, anchor="nw")
+        self.wand_time_text = tkinter.Label(root, text=round(time_of_last_heartbeat, 0), borderwidth=2, relief="groove", width=15, anchor="nw")
         self.wand_time_text.grid(row=self.index, column=2)
 
         self.update_row_color()
 
-    def update_heartbeat(self, time_since_last_heartbeat):
-        self.time_since_last_heartbeat = time_since_last_heartbeat
-        self.wand_time_text.config({"text": round(time_since_last_heartbeat, 0)})
-        self.update_row_color()
+    def heartbeat_received(self):
+        self.time_of_last_heartbeat = time.time()
 
     def update_row_color(self):
-        if self.time_since_last_heartbeat < 2:
+        time_since_last_heartbeat = time.time() - self.time_of_last_heartbeat
+
+        if time_since_last_heartbeat < 2:
             newColor = "green"
-        elif self.time_since_last_heartbeat < 10:
+        elif time_since_last_heartbeat < 10:
             newColor = "yellow"
         else:
             newColor = "red"
@@ -250,7 +270,9 @@ class GadgetStatus:
     def update_row_status(self, new_status):
         self.wand_status_text.config({"text": new_status})
 
-
+    def update_time_box(self):
+        time_since_last_heartbeat = time.time() - self.time_of_last_heartbeat
+        self.wand_time_text.config({"text": round(time_since_last_heartbeat, 0)})
 
 
 if __name__ == "__main__":

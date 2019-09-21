@@ -3,7 +3,7 @@ from TeaServer.TeaScript import attendees
 from TeaServer.TeaScript import game_states
 from TeaServer.GameRunnerGui import GameRunnerGui
 from TeaServer.TeaAnnouncer import TeaAnnouncer
-from TeaServer.ServerListenerLink import SmokerListener
+from TeaServer.ServerListenerLink import SmokerListener, WandListener
 
 
 class TheDarkPoison:
@@ -11,6 +11,7 @@ class TheDarkPoison:
         self.gui = GameRunnerGui()
         self.announcer = TeaAnnouncer(time_between_heartbeats=1, current_game_state=game_states[0][0])
         self.smoker_listener = SmokerListener()
+        self.wand_listener = WandListener()
 
     def run(self):
         while True:
@@ -26,8 +27,12 @@ class TheDarkPoison:
             smoker_data = self.smoker_listener.service_smoker()
             if smoker_data is not None:
                 smoker_heartbeat_id, smoker_state = smoker_data
-                print("got smoker heartbeat {}, {}".format(smoker_heartbeat_id, smoker_state))
-                self.gui.smokerStatus.update_heartbeat(time_since_last_heartbeat=0.0)
+                self.gui.smokerStatus.heartbeat_received()
+
+            wand_data = self.wand_listener.service_wands()
+            if wand_data is not None:
+                message_id, wand_id, wand_state = wand_data
+                self.gui.update_wand_status(message_id, wand_id, wand_state)
 
 
 

@@ -50,11 +50,25 @@ class SmokerListener(ServerListenerLink):
 
         if msg is not None:
             if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT") and (msg.data["GADGET_ID"] == "SMOKER"):
-                return (msg.data["MESSAGE_ID"], msg.data["GADGET_STATE"])
+                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_STATE"].strip())
 
         return None
 
 
+class WandListener(ServerListenerLink):
+    WAND_PORT = 10109
+
+    def __init__(self):
+        super().__init__(gadget_port=self.WAND_PORT)
+
+    def service_wands(self):
+        msg = self.service_server()
+
+        if msg is not None:
+            if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT"):
+                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_ID"].strip(), msg.data["GADGET_STATE"].strip())
+
+        return None
 
 
 if __name__ == "__main__":
