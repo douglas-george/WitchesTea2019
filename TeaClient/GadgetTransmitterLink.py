@@ -8,7 +8,7 @@ class GadgetTransmitterLink:
     The GadgetTransmitterLink's job is to transmit a gadget's messages to a ServerListenerLink
     """
 
-    GADGET_BCAST_ADDR = "255.255.255.255"
+    GADGET_BCAST_ADDR = "192.168.5.255"
 
     def __init__(self, gadget_port, heartbeat_rate, client_id):
         self.gadget_port = gadget_port

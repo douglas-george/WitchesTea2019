@@ -7,7 +7,7 @@ class GadgetListenerLink:
     The job of the GadgetListenerLink is to listen on a port for broadcasts from the Announcer.
     """
 
-    ANNOUNCEMENT_BCAST_ADDR = "255.255.255.255"
+    ANNOUNCEMENT_BCAST_ADDR = "192.168.5.255"
     ANNOUNCEMENT_PORT = 10103
 
     def __init__(self):

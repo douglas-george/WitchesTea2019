@@ -7,7 +7,7 @@ class TeaAnnouncer:
     """
     The TeaAnnouncer's job is to periodically broadcast the current game status.
     """
-    ANNOUNCEMENT_BCAST_ADDR = "255.255.255.255"
+    ANNOUNCEMENT_BCAST_ADDR = "192.168.5.255"
     ANNOUNCEMENT_PORT = 10103
 
     def __init__(self, time_between_heartbeats, current_game_state):

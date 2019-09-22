@@ -7,7 +7,7 @@ class ServerListenerLink:
     The job of the ServerListenerLink is to listen on a port for incoming data from a gadget.
     """
 
-    GADGET_BCAST_ADDR = "255.255.255.255"
+    GADGET_BCAST_ADDR = "192.168.5.255"
 
     def __init__(self, gadget_port):
         self.gadget_port = gadget_port

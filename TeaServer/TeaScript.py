@@ -10,10 +10,10 @@ attendees = ["Dennis", "Delta",
              "Courtney", "Hannah", "Luke"]
 
 
-game_states = (("WAITING_TO_START", "Waiting for guests to arrive, gadgets asleep, checking in occasionally."),
-               ("AT_ATTENTION", "Eating dinner, gadgets frequently checking in."),
+game_states = (("WAITING TO START", "Waiting for guests to arrive, gadgets asleep, checking in occasionally."),
+               ("AT ATTENTION", "Eating dinner, gadgets frequently checking in."),
                ("SMOKING", "The smoker is actively smoking, Asmodean's audio clip is playing"),
-               ("REGINAS WARNING", "Regina's audio clip is playing"),
+               ("REGINA'S WARNING", "Regina's audio clip is playing"),
                ("WANDS AT THE READY", "Wands buzz, Regina's next clip plays"),
                ("CHECK FOR POISONING", "Everyone eats dessert #1"))
 
