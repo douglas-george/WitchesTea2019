@@ -1,7 +1,7 @@
 import time
 import RPi.GPIO as gpio
-from TeaClient.GadgetListenerLink import GadgetListenerLink
-from TeaClient.GadgetTransmitterLink import GadgetTransmitterLink
+from GadgetListenerLink import GadgetListenerLink
+from GadgetTransmitterLink import GadgetTransmitterLink
 
 
 class SmokerClient():
@@ -75,10 +75,13 @@ class SmokerClient():
 
     def test_relays(self):
         for relayId in [RelayBoard.RELAY_1_GPIO, RelayBoard.RELAY_2_GPIO, RelayBoard.RELAY_3_GPIO, RelayBoard.RELAY_4_GPIO, RelayBoard.RELAY_5_GPIO, RelayBoard.RELAY_6_GPIO, RelayBoard.RELAY_7_GPIO, RelayBoard.RELAY_8_GPIO]:
+            print(relayId)
             self.relayBoard.turn_relay_on(relayId)
             time.sleep(1)
             self.relayBoard.turn_relay_off(relayId)
             time.sleep(1)
+
+        self.relayBoard.cleanup()
 
 
 class RelayBoard:
@@ -96,34 +99,37 @@ class RelayBoard:
         gpio.setmode(gpio.BCM)
 
         gpio.setup(self.RELAY_1_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_1_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_1_GPIO)
 
         gpio.setup(self.RELAY_2_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_2_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_2_GPIO)
 
         gpio.setup(self.RELAY_3_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_3_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_3_GPIO)
 
         gpio.setup(self.RELAY_4_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_4_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_4_GPIO)
 
         gpio.setup(self.RELAY_5_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_5_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_5_GPIO)
 
         gpio.setup(self.RELAY_6_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_6_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_6_GPIO)
 
         gpio.setup(self.RELAY_7_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_7_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_7_GPIO)
 
         gpio.setup(self.RELAY_8_GPIO, gpio.OUT)
-        gpio.output(self.RELAY_8_GPIO, gpio.LOW)
+        self.turn_relay_off(self.RELAY_8_GPIO)
 
     def turn_relay_on(self, relay_gpio):
-        gpio.output(relay_gpio, gpio.HIGH)
+        gpio.output(relay_gpio, gpio.LOW)
 
     def turn_relay_off(self, relay_gpio):
-        gpio.output(relay_gpio, gpio.LOW)
+        gpio.output(relay_gpio, gpio.HIGH)
+
+    def cleanup(self):
+        gpio.cleanup()
 
 
 
@@ -131,6 +137,9 @@ if __name__ == "__main__":
     smoker = SmokerClient()
 
     #smoker.run()
+
+    time.sleep(10)
+    
     smoker.test_relays()
 
 
