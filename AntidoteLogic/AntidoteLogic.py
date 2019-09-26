@@ -89,17 +89,17 @@ class PoisonTester(object):
                     return True
 
         # DETECTOR7 causes the infected person to sing, in an operatic voice, the variety of poison they are afflicted with
-        # if Ingredient.DETECTOR7 in dessert.ingredientList:
-        #    if (theRealPoison.variety != thisPoison.variety):
-        #        return True
-
-        # DETECTOR7 causes the infected person to sing, in an operatic voice, if they are not afflicted with a scourge
         if Ingredient.DETECTOR7 in dessert.ingredientList:
-            if (theRealPoison.variety != Poison.POISON_VARIETY_SCOURGE) and (
-                    thisPoison.element == Poison.POISON_VARIETY_SCOURGE):
+            if (theRealPoison.variety != thisPoison.variety):
                 return True
 
-                # DETECTOR8 causes an incredibly and painfully spicy reaction to someone afflicted with earth or ether blights
+        # DETECTOR7 causes the infected person to sing, in an operatic voice, if they are not afflicted with a scourge
+        #if Ingredient.DETECTOR7 in dessert.ingredientList:
+        #    if (theRealPoison.variety != Poison.POISON_VARIETY_SCOURGE) and (
+        #            thisPoison.element == Poison.POISON_VARIETY_SCOURGE):
+        #        return True
+
+        # DETECTOR8 causes an incredibly and painfully spicy reaction to someone afflicted with earth or ether blights
         if Ingredient.DETECTOR8 in dessert.ingredientList:
             if ((theRealPoison.element == Poison.POISON_ELEMENT_EARTH) or (
                     theRealPoison.element == Poison.POISON_ELEMENT_ETHER)) and (
@@ -177,14 +177,15 @@ if __name__ == "__main__":
     thePoison = Poison(poisonName="ThePoison!", state=Poison.POISON_STATE_GAS, variety=Poison.POISON_VARIETY_VENOM,
                        element=Poison.POISON_ELEMENT_FIRE)
 
-    permutations = list(permutations(dessertList))
+    #permutations = list(permutations(dessertList))
+    permutations = [dessertList,]
 
     minToSolve = 100000000
     brokenLogic = False
     for permutation in permutations:
-        # for element in permutation:
-        #    print("{}, ".format(element), end = '')
-        # print("")
+        for element in permutation:
+            print("{}, ".format(element), end='')
+        print("")
 
         dessertOrder = list(permutation)
         dessertOrder.insert(0, visualInspection)
