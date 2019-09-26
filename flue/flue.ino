@@ -23,12 +23,17 @@ void setup()
 
   InitComms();
 
+  InitLeds();
+
   SendHeartbeat();
 }
 
 
 void loop()
 {
+  ServiceLeds();
+  
+  /*
   bool gameStateIsValid;
   int messageId;
   int messageCount;
@@ -91,4 +96,5 @@ void loop()
   {
     Serial.println("Uh-oh!!!!! Missed heartbeat!!!");
   }
+  */
 }

@@ -31,7 +31,7 @@ void InitComms(void)
   Serial.print("WiFi connected with IP: ");
   Serial.println(WiFi.localIP());
 
-  outgoing_udp.begin(WAND_PORT);
+  outgoing_udp.begin(FLUE_PORT);
   incoming_udp.begin(ANNOUNCEMENT_PORT);
 }
 
