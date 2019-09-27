@@ -27,6 +27,8 @@ void setup()
   
   InitLeds();
 
+  InitImu();
+
   InitComms();
 
   SendHeartbeat();
@@ -39,11 +41,10 @@ void loop()
   int messageId;
   int messageCount;
   GameState latestState;
-
   
   SendHeartbeatIfNeeded();
 
-  
+  ServiceImu();
   
   bool validGameState = GetGameState(messageId, messageCount, latestState);
 
