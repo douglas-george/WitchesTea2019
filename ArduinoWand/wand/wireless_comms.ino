@@ -57,80 +57,71 @@ String parseOutTag(String& fullStr, String& tagName)
 
 bool GetGameState(int& messageId, int& messageCount, GameState& currentState)
 {
-  unsigned long expirationTime = millis() + 5000;
   int packetSize;
 
-  while (millis() < expirationTime)
+  uint8_t incomingPacket[500];
+  
+  packetSize = incoming_udp.parsePacket();
+
+  if (packetSize > 0)
   {
-    uint8_t incomingPacket[500];
+    //Serial.printf("Received %d bytes from %s, port %d\n", packetSize, incoming_udp.remoteIP().toString().c_str(), incoming_udp.remotePort());
+    int len = incoming_udp.read(incomingPacket, 500);
 
-    delay(50);
+    String fullStr = String((const char*) incomingPacket); 
     
-    packetSize = incoming_udp.parsePacket();
-
-    if (packetSize > 0)
+    String tagName = String("MESSAGE_TYPE");
+    String contents = parseOutTag(fullStr, tagName);
+    if (contents != String("GAME_HEARTBEAT"))
     {
-      //Serial.printf("Received %d bytes from %s, port %d\n", packetSize, incoming_udp.remoteIP().toString().c_str(), incoming_udp.remotePort());
-      int len = incoming_udp.read(incomingPacket, 500);
+      Serial.println(contents);
+    }
 
+    tagName = String("GADGET_ID");
+    String gadgetId = parseOutTag(fullStr, tagName);
 
-      String fullStr = String((const char*) incomingPacket); 
-      
-      String tagName = String("MESSAGE_TYPE");
-      String contents = parseOutTag(fullStr, tagName);
-      if (contents != String("GAME_HEARTBEAT"))
-      {
-        Serial.println(contents);
-      }
+    tagName = String("MESSAGE_ID");
+    messageId = parseOutTag(fullStr, tagName).toInt();
 
-      tagName = String("GADGET_ID");
-      String gadgetId = parseOutTag(fullStr, tagName);
+    tagName = String("MESSAGE_COUNT");
+    messageCount = parseOutTag(fullStr, tagName).toInt();
 
-      tagName = String("MESSAGE_ID");
-      messageId = parseOutTag(fullStr, tagName).toInt();
+    tagName = String("GAME_STATE");
+    String gameState = parseOutTag(fullStr, tagName);
 
-      tagName = String("MESSAGE_COUNT");
-      messageCount = parseOutTag(fullStr, tagName).toInt();
-
-      tagName = String("GAME_STATE");
-      String gameState = parseOutTag(fullStr, tagName);
-
-      if (gameState == String("WAITING TO START"))
-      {
-        currentState = WAITING_TO_START;
-        return true;
-      }
-      else if (gameState == String("AT ATTENTION"))
-      {
-        currentState = AT_ATTENTION;
-        return true;
-      }
-      else if (gameState == String("SMOKING"))
-      {
-        currentState = SMOKING;
-        return true;
-      }
-      else if (gameState == String("REGINA'S WARNING"))
-      {
-        currentState = REGINAS_WARNING;
-        return true;
-      }
-      else if (gameState == String("WANDS AT THE READY"))
-      {
-        currentState = WANDS_AT_THE_READY;
-        return true;
-      }
-      else if (gameState == String("CHECK FOR POISONING"))
-      {
-        currentState = CHECK_FOR_POISONING;
-        return true;
-      }
-
-      return false;
+    if (gameState == String("WAITING TO START"))
+    {
+      currentState = WAITING_TO_START;
+      return true;
+    }
+    else if (gameState == String("AT ATTENTION"))
+    {
+      currentState = AT_ATTENTION;
+      return true;
+    }
+    else if (gameState == String("SMOKING"))
+    {
+      currentState = SMOKING;
+      return true;
+    }
+    else if (gameState == String("REGINA'S WARNING"))
+    {
+      currentState = REGINAS_WARNING;
+      return true;
+    }
+    else if (gameState == String("WANDS AT THE READY"))
+    {
+      currentState = WANDS_AT_THE_READY;
+      return true;
+    }
+    else if (gameState == String("CHECK FOR POISONING"))
+    {
+      currentState = CHECK_FOR_POISONING;
+      return true;
     }
   }
 
-  // timed out without receiving game heartbeat
+  // didn't receive heartbeat this time
   return false;
 }
 

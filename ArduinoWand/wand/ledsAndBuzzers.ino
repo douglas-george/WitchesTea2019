@@ -17,7 +17,7 @@ void InitLeds()
 {
   // set lines to output
 
-// setup each PWM channel
+  // setup each PWM channel
   ledcSetup(redPwmChannel, 5000, 8);
   ledcSetup(greenPwmChannel, 5000, 8);
   ledcSetup(bluePwmChannel, 5000, 8);

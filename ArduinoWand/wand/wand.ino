@@ -17,21 +17,39 @@ String currentState = "UNKNOWN";
 
 int lastProcessedMessageId = -1;
 
+int timeOfNextInterval = millis();
+
+int timeOfLastHeartbeatRx = millis();
+
+int timeOfLastMissedHeartbeatWarning = 0;
+
+int LoopCounts = 0;
+int movementCounts = 0;
+int motionCheckPeriod = 1500;
+double requisiteMovementPercentage = 0.55;
+
 
 void setup()
 {
   // Initilize hardware:
   Serial.begin(115200);
 
+  Serial.println("Initializing Buzzers");
   InitBuzzers();
-  
+
+  Serial.println("Initializing LEDs");
   InitLeds();
 
+  Serial.println("Initializing IMU");
   InitImu();
 
+  Serial.println("Initializing Comms");
   InitComms();
 
+  Serial.println("Sending first heartbeat.");
   SendHeartbeat();
+
+  Serial.println("Starting main loop...");
 }
 
 
@@ -41,18 +59,45 @@ void loop()
   int messageId;
   int messageCount;
   GameState latestState;
-  
+  bool wandIsGettingMoved;
+  int currentTime;
+
+  currentTime = millis();
+  LoopCounts += 1;
+
   SendHeartbeatIfNeeded();
 
-  ServiceImu();
-  
-  bool validGameState = GetGameState(messageId, messageCount, latestState);
-
-  if (validGameState)
+  wandIsGettingMoved = ServiceImu();
+  if (wandIsGettingMoved)
   {
+    movementCounts++;
+  }
+
+  if (currentTime > timeOfNextInterval)
+  {
+    double movementPercentage = double(movementCounts) / double(LoopCounts);
+    if (movementPercentage > requisiteMovementPercentage)
+    {
+      Serial.print("Last second there were ");
+      Serial.print(movementCounts);
+      Serial.print(" / ");
+      Serial.println(LoopCounts);
+    }
+    LoopCounts = 0;
+    movementCounts = 0;
+    timeOfNextInterval = currentTime + motionCheckPeriod;
+  }
+
+  
+  gameStateIsValid = GetGameState(messageId, messageCount, latestState);
+
+  if (gameStateIsValid)
+  {
+    timeOfLastHeartbeatRx = currentTime;
+    
     if (messageId == lastProcessedMessageId)
     {
-      Serial.println("I have already handled this state...");
+      // already handled this state - do nothing.
     }
     else
     {
@@ -96,6 +141,18 @@ void loop()
   }
   else
   {
-    Serial.println("Uh-oh!!!!! Missed heartbeat!!!");
+    if (currentTime - timeOfLastMissedHeartbeatWarning > 5000)
+    {
+      int timeSinceLastHeartbeatRx = currentTime - timeOfLastHeartbeatRx;
+      if (timeSinceLastHeartbeatRx > 5000)
+      {
+        double printTime = timeSinceLastHeartbeatRx / 1000.0;
+        
+        Serial.print("Warning, it has been over ");
+        Serial.print(printTime);
+        Serial.println(" seconds without hearing a heartbeat from the game server!!!!");
+        timeOfLastMissedHeartbeatWarning = currentTime;
+      }
+    }
   }
 }
