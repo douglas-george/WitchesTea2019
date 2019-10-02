@@ -13,46 +13,49 @@
 #include "MPU9250.h"
 
 
+
 #define AHRS false         // Set to false for basic data read
-#define SerialDebug true  // Set to true to get Serial output for debugging
+#define SerialDebug false  // Set to true to get Serial output for debugging
 
 #define I2Cclock 400000
 #define I2Cport Wire
 
-//#define MPU9250_ADDRESS MPU9250_ADDRESS_AD0   // Use either this line or the next to select which I2C address your device is using
-#define MPU9250_ADDRESS MPU9250_ADDRESS_AD1
+#define MPU9250_ADDRESS MPU9250_ADDRESS_AD0   // Use either this line or the next to select which I2C address your device is using
+//#define MPU9250_ADDRESS MPU9250_ADDRESS_AD1
 
 
 // Pin definitions
-int intPin = 12;  // These can be changed, 2 and 3 are the Arduinos ext int pins
-int myLed  = 13;  // Set up pin 13 led for toggling
-
+int intPin = 25;
 
 
 MPU9250 myIMU(MPU9250_ADDRESS, I2Cport, I2Cclock);
+
 
 void InitImu()
 {
   Wire.begin();
   // TWBR = 12;  // 400 kbit/sec I2C speed
-  Serial.begin(38400);
 
   while(!Serial){};
 
   // Set up the interrupt pin, its set as active high, push-pull
   pinMode(intPin, INPUT);
   digitalWrite(intPin, LOW);
-  pinMode(myLed, OUTPUT);
-  digitalWrite(myLed, HIGH);
 
   // Read the WHO_AM_I register, this is a good test of communication
   byte c = myIMU.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
   Serial.print(F("MPU9250 I AM 0x"));
   Serial.print(c, HEX);
   Serial.print(F(" I should be 0x"));
+  
+#if 0  
   Serial.println(0x71, HEX);
-
   if (c == 0x71) // WHO_AM_I should always be 0x71
+#else
+  Serial.println(0x73, HEX);
+  if (c == 0x73) // WHO_AM_I should always be 0x73
+#endif
+
   {
     Serial.println(F("MPU9250 is online..."));
 
@@ -154,8 +157,11 @@ void InitImu()
   }
 }
 
-void ServiceImu()
+bool ServiceImu()
 {
+  bool wandIsGettingMoved = false;
+
+  
   // If intPin goes high, all data registers have new data
   // On interrupt, check if data ready interrupt
   if (myIMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
@@ -207,6 +213,18 @@ void ServiceImu()
 
   if (!AHRS)
   {
+
+    
+    float threshold = 1.75;
+    
+    if (((myIMU.ax > threshold) || (myIMU.ax < -threshold)) ||
+        ((myIMU.ay > threshold) || (myIMU.ay < -threshold)) ||
+        ((myIMU.az > threshold) || (myIMU.az < -threshold)))
+    {
+      wandIsGettingMoved = true;
+    }
+
+    
     myIMU.delt_t = millis() - myIMU.count;
     if (myIMU.delt_t > 500)
     {
@@ -214,9 +232,9 @@ void ServiceImu()
       {
         // Print acceleration values in milligs!
         Serial.print("X-acceleration: "); Serial.print(1000 * myIMU.ax);
-        Serial.print(" mg ");
+        Serial.println(" mg ");
         Serial.print("Y-acceleration: "); Serial.print(1000 * myIMU.ay);
-        Serial.print(" mg ");
+        Serial.println(" mg ");
         Serial.print("Z-acceleration: "); Serial.print(1000 * myIMU.az);
         Serial.println(" mg ");
 
@@ -244,9 +262,10 @@ void ServiceImu()
         Serial.println(" degrees C");
       }
 
+      
+
       myIMU.count = millis();
-      digitalWrite(myLed, !digitalRead(myLed));  // toggle led
-    } // if (myIMU.delt_t > 500)
+    }
   } // if (!AHRS)
   else
   {
@@ -333,4 +352,6 @@ void ServiceImu()
       myIMU.sum = 0;
     } // if (myIMU.delt_t > 500)
   } // if (AHRS)
+
+  return wandIsGettingMoved;
 }
