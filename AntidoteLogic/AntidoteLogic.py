@@ -28,17 +28,17 @@ class Poison(object):
 
 
 class Ingredient(object):
-    DETECTOR0 = "DET0"
-    DETECTOR1 = "DET1"
-    DETECTOR2 = "DET2"
-    DETECTOR3 = "DET3"
-    DETECTOR4 = "DET4"
-    DETECTOR5 = "DET5"
-    DETECTOR6 = "DET6"
-    DETECTOR7 = "DET7"
-    DETECTOR8 = "DET8"
-    DETECTOR9 = "DET9"
-    DETECTOR10 = "DET10"
+    D0_VISUAL_INSPECTION = "DET0"
+    D1_BANEBERRY = "DET1"
+    D2_BILLYWIG_STING_SLIME = "DET2"
+    D3_MOONDEW = "DET3"
+    D4_HALIWINKLES = "DET4"
+    D5_LACEWINGS = "DET5"
+    D6_BULBADOX_JUICE = "DET6"
+    D7_HORKLUMP_JUICE = "DET7"
+    D8_PEARL_DUST = "DET8"
+    D9_DRAGONFLY_THORAX = "DET9"
+    D10_LICHEN_POWDER = "DET10"
 
 
 class Dessert(object):
@@ -53,13 +53,13 @@ class Dessert(object):
 class PoisonTester(object):
     @staticmethod
     def NotThePoison(theRealPoison, thisPoison, dessert):
-        # DETECTOR0 is the visual inspection of the elements state...
-        if Ingredient.DETECTOR0 in dessert.ingredientList:
+        # D0_VISUAL_INSPECTION is the visual inspection of the elements state...
+        if Ingredient.D0_VISUAL_INSPECTION in dessert.ingredientList:
             if (theRealPoison.state != thisPoison.state):
                 return True
 
-        # DETECTOR1 tastes sweet to those infected by blights, scourges, or venoms
-        if Ingredient.DETECTOR1 in dessert.ingredientList:
+        # D1_BANEBERRY makes things taste bitter to those who have been poisoned with a toxin (sweet to those infected by blights, scourges, or venoms)
+        if Ingredient.D1_BANEBERRY in dessert.ingredientList:
             if (theRealPoison.variety == Poison.POISON_VARIETY_BLIGHT) or (
                     theRealPoison.variety == Poison.POISON_VARIETY_SCOURGE) or (
                     theRealPoison.variety == Poison.POISON_VARIETY_VENOM):
@@ -68,39 +68,33 @@ class PoisonTester(object):
                         thisPoison.variety != Poison.POISON_VARIETY_VENOM):
                     return True
 
-        # DETECTOR2 and DETECTOR3 together has a minty flavor when consumed with an earth or fire poison
-        if (Ingredient.DETECTOR2 in dessert.ingredientList) and (Ingredient.DETECTOR3 in dessert.ingredientList):
+        # D2_BILLYWIG_STING_SLIME and D3_MOONDEW together have a minty flavor when consumed with an earth or fire poison, cinammon for water or ether, garlic for air
+        if (Ingredient.D2_BILLYWIG_STING_SLIME in dessert.ingredientList) and (Ingredient.D3_MOONDEW in dessert.ingredientList):
             if (theRealPoison.element == Poison.POISON_ELEMENT_EARTH) or (
                     theRealPoison.element == Poison.POISON_ELEMENT_FIRE):
                 if (thisPoison.element != Poison.POISON_ELEMENT_EARTH) and (
                         thisPoison.element != Poison.POISON_ELEMENT_FIRE):
                     return True
 
-        # DETECTOR4 has a distinct chocolate flavor to those afflicted with any poison
-        if Ingredient.DETECTOR4 in dessert.ingredientList:
+        # D4_HALIWINKLES has a distinct chocolate flavor to those afflicted with any poison
+        if Ingredient.D4_HALIWINKLES in dessert.ingredientList:
             pass
 
-        # DETECTOR5 and DETECTOR6 taken together cause uncontrollable laughter in those afflicted with blights or venoms
-        if (Ingredient.DETECTOR5 in dessert.ingredientList) and (Ingredient.DETECTOR6 in dessert.ingredientList):
+        # D5_LACEWINGS and D6_BULBADOX_JUICE taken together cause uncontrollable laughter in those afflicted with blights or venoms
+        if (Ingredient.D5_LACEWINGS in dessert.ingredientList) and (Ingredient.D6_BULBADOX_JUICE in dessert.ingredientList):
             if (theRealPoison.variety == Poison.POISON_VARIETY_BLIGHT) or (
                     theRealPoison.variety == Poison.POISON_VARIETY_VENOM):
                 if (thisPoison.variety != Poison.POISON_VARIETY_BLIGHT) and (
                         thisPoison.variety != Poison.POISON_VARIETY_VENOM):
                     return True
 
-        # DETECTOR7 causes the infected person to sing, in an operatic voice, the variety of poison they are afflicted with
-        if Ingredient.DETECTOR7 in dessert.ingredientList:
+        # D7_HORKLUMP_JUICE causes the infected person to sing, in an operatic voice, the variety of poison they are afflicted with
+        if Ingredient.D7_HORKLUMP_JUICE in dessert.ingredientList:
             if (theRealPoison.variety != thisPoison.variety):
                 return True
 
-        # DETECTOR7 causes the infected person to sing, in an operatic voice, if they are not afflicted with a scourge
-        #if Ingredient.DETECTOR7 in dessert.ingredientList:
-        #    if (theRealPoison.variety != Poison.POISON_VARIETY_SCOURGE) and (
-        #            thisPoison.element == Poison.POISON_VARIETY_SCOURGE):
-        #        return True
-
-        # DETECTOR8 causes an incredibly and painfully spicy reaction to someone afflicted with earth or ether blights
-        if Ingredient.DETECTOR8 in dessert.ingredientList:
+        # D8_PEARL_DUST causes an incredibly and painfully spicy reaction to someone afflicted with earth or ether blights
+        if Ingredient.D8_PEARL_DUST in dessert.ingredientList:
             if ((theRealPoison.element == Poison.POISON_ELEMENT_EARTH) or (
                     theRealPoison.element == Poison.POISON_ELEMENT_ETHER)) and (
                     theRealPoison.variety == Poison.POISON_VARIETY_BLIGHT):
@@ -109,8 +103,8 @@ class PoisonTester(object):
                         thisPoison.variety != Poison.POISON_VARIETY_BLIGHT):
                     return True
 
-        # DETECTOR9 causes drooling and foaming at the mouth for those afflicted with air venoms or fire toxins
-        if Ingredient.DETECTOR9 in dessert.ingredientList:
+        # D9_DRAGONFLY_THORAX causes drooling and foaming at the mouth for those afflicted with air venoms or fire toxins
+        if Ingredient.D9_DRAGONFLY_THORAX in dessert.ingredientList:
             if (theRealPoison.element == Poison.POISON_ELEMENT_AIR) and (
                     theRealPoison.variety == Poison.POISON_VARIETY_VENOM):
                 if (thisPoison.element != Poison.POISON_ELEMENT_AIR) or (
@@ -123,8 +117,8 @@ class PoisonTester(object):
                         thisPoison.variety != Poison.POISON_VARIETY_TOXIN):
                     return True
 
-        # DETECTOR10 causes _______________ in any afflicted with a fire, air, or ether poison in a gaseous or liquid state
-        if Ingredient.DETECTOR10 in dessert.ingredientList:
+        # D10_LICHEN_POWDER tastes like bananas* in any afflicted with a fire, air, or ether poison in a gaseous or liquid state
+        if Ingredient.D10_LICHEN_POWDER in dessert.ingredientList:
             if ((theRealPoison.element == Poison.POISON_ELEMENT_FIRE) or (
                     theRealPoison.element == Poison.POISON_ELEMENT_AIR) or (
                         theRealPoison.element == Poison.POISON_ELEMENT_ETHER)) and (
@@ -139,19 +133,19 @@ class PoisonTester(object):
 
 
 if __name__ == "__main__":
-    visualInspection = Dessert(dessertName="VisualInspection", ingredientList=[Ingredient.DETECTOR0, ])
+    visualInspection = Dessert(dessertName="VisualInspection", ingredientList=[Ingredient.D0_VISUAL_INSPECTION, ])
     dessert1 = Dessert(dessertName="Dessert1",
-                       ingredientList=[Ingredient.DETECTOR2, Ingredient.DETECTOR3, Ingredient.DETECTOR4])
+                       ingredientList=[Ingredient.D2_BILLYWIG_STING_SLIME, Ingredient.D4_HALIWINKLES])
     dessert2 = Dessert(dessertName="Dessert2",
-                       ingredientList=[Ingredient.DETECTOR1, Ingredient.DETECTOR3, Ingredient.DETECTOR6])
-    dessert3 = Dessert(dessertName="Dessert3", ingredientList=[Ingredient.DETECTOR2, Ingredient.DETECTOR3])
+                       ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D3_MOONDEW, Ingredient.D6_BULBADOX_JUICE])
+    dessert3 = Dessert(dessertName="Dessert3", ingredientList=[Ingredient.D2_BILLYWIG_STING_SLIME, Ingredient.D3_MOONDEW])
     dessert4 = Dessert(dessertName="Dessert4",
-                       ingredientList=[Ingredient.DETECTOR3, Ingredient.DETECTOR5, Ingredient.DETECTOR6])
+                       ingredientList=[Ingredient.D3_MOONDEW, Ingredient.D5_LACEWINGS, Ingredient.D6_BULBADOX_JUICE])
     dessert5 = Dessert(dessertName="Dessert5",
-                       ingredientList=[Ingredient.DETECTOR1, Ingredient.DETECTOR3, Ingredient.DETECTOR7])
-    dessert6 = Dessert(dessertName="Dessert6", ingredientList=[Ingredient.DETECTOR5, Ingredient.DETECTOR7])
-    dessert7 = Dessert(dessertName="Dessert7", ingredientList=[Ingredient.DETECTOR9])
-    dessert8 = Dessert(dessertName="Dessert8", ingredientList=[Ingredient.DETECTOR10])
+                       ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D3_MOONDEW])
+    dessert6 = Dessert(dessertName="Dessert6", ingredientList=[Ingredient.D8_PEARL_DUST])
+    dessert7 = Dessert(dessertName="Dessert7", ingredientList=[Ingredient.D5_LACEWINGS, Ingredient.D7_HORKLUMP_JUICE])
+    dessert8 = Dessert(dessertName="Dessert8", ingredientList=[Ingredient.D10_LICHEN_POWDER])
 
     dessertList = []
     dessertList.append(dessert1)
