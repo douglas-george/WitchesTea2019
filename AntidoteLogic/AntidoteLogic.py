@@ -134,18 +134,30 @@ class PoisonTester(object):
 
 if __name__ == "__main__":
     visualInspection = Dessert(dessertName="VisualInspection", ingredientList=[Ingredient.D0_VISUAL_INSPECTION, ])
+
     dessert1 = Dessert(dessertName="Dessert1",
                        ingredientList=[Ingredient.D2_BILLYWIG_STING_SLIME, Ingredient.D4_HALIWINKLES])
+
     dessert2 = Dessert(dessertName="Dessert2",
                        ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D3_MOONDEW, Ingredient.D6_BULBADOX_JUICE])
-    dessert3 = Dessert(dessertName="Dessert3", ingredientList=[Ingredient.D2_BILLYWIG_STING_SLIME, Ingredient.D3_MOONDEW])
+
+    dessert3 = Dessert(dessertName="Dessert3",
+                       ingredientList=[Ingredient.D2_BILLYWIG_STING_SLIME, Ingredient.D3_MOONDEW])
+
     dessert4 = Dessert(dessertName="Dessert4",
                        ingredientList=[Ingredient.D3_MOONDEW, Ingredient.D5_LACEWINGS, Ingredient.D6_BULBADOX_JUICE])
+
     dessert5 = Dessert(dessertName="Dessert5",
                        ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D3_MOONDEW])
-    dessert6 = Dessert(dessertName="Dessert6", ingredientList=[Ingredient.D8_PEARL_DUST])
-    dessert7 = Dessert(dessertName="Dessert7", ingredientList=[Ingredient.D5_LACEWINGS, Ingredient.D7_HORKLUMP_JUICE])
-    dessert8 = Dessert(dessertName="Dessert8", ingredientList=[Ingredient.D10_LICHEN_POWDER])
+
+    dessert6 = Dessert(dessertName="Dessert6",
+                       ingredientList=[Ingredient.D8_PEARL_DUST])
+
+    dessert7 = Dessert(dessertName="Dessert7",
+                       ingredientList=[Ingredient.D5_LACEWINGS, Ingredient.D7_HORKLUMP_JUICE])
+
+    dessert8 = Dessert(dessertName="Dessert8",
+                       ingredientList=[Ingredient.D10_LICHEN_POWDER])
 
     dessertList = []
     dessertList.append(dessert1)
