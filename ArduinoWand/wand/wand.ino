@@ -11,8 +11,6 @@ enum GameState
 
 
 
-const char* WAND_OWNER = "Delta";
-
 String currentState = "UNKNOWN";
 
 int lastProcessedMessageId = -1;
@@ -22,6 +20,9 @@ int timeOfNextInterval = millis();
 int timeOfLastHeartbeatRx = millis();
 
 int timeOfLastMissedHeartbeatWarning = 0;
+
+const int maxOwnerLength = 50;
+char storedWandOwner[maxOwnerLength];
 
 int LoopCounts = 0;
 int movementCounts = 0;
@@ -33,6 +34,11 @@ void setup()
 {
   // Initilize hardware:
   Serial.begin(115200);
+
+  Serial.println("Initializing Wand ID");
+  InitWandId();
+  Serial.print("This wand belongs to ");
+  Serial.println(storedWandOwner);
 
   Serial.println("Initializing Buzzers");
   InitBuzzers();
