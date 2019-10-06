@@ -31,8 +31,8 @@ class TheDarkPoison:
 
             wand_data = self.wand_listener.service_wands()
             if wand_data is not None:
-                message_id, wand_id, wand_state, sender_ip = wand_data
-                self.gui.update_wand_status(message_id, wand_id, wand_state, sender_ip)
+                message_id, wand_id, wand_state, compile_date, compile_time, sender_ip = wand_data
+                self.gui.update_wand_status(message_id, wand_id, wand_state, compile_date, compile_time, sender_ip)
 
 
 

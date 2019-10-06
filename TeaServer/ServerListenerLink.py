@@ -26,7 +26,6 @@ class ServerListenerLink:
                 return_data, sender_info = self.socket.recvfrom(1024)
                 sender_ip, sender_port = sender_info
                 return_data = return_data.decode("utf-8")
-                print("Got it from {}".format(sender_ip))
 
             except BlockingIOError:
                 break
@@ -72,7 +71,12 @@ class WandListener(ServerListenerLink):
         if results is not None:
             msg, sender_ip = results
             if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT"):
-                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_ID"].strip(), msg.data["GADGET_STATE"].strip(), sender_ip)
+                return (msg.data["MESSAGE_ID"].strip(),
+                        msg.data["GADGET_ID"].strip(),
+                        msg.data["GADGET_STATE"].strip(),
+                        msg.data["COMPILE_DATE"].strip(),
+                        msg.data["COMPILE_TIME"].strip(),
+                        sender_ip)
 
         return None
 

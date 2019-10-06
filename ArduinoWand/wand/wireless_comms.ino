@@ -184,6 +184,16 @@ void FormHeartbeat(String& heartbeat)
   heartbeat = String(heartbeat + subString);
   heartbeat = String(heartbeat + "\t</GADGET_STATE>\n\r");
 
+  heartbeat = String(heartbeat + "\t<COMPILE_DATE>");
+  subString = String(__DATE__);
+  heartbeat = String(heartbeat + subString);
+  heartbeat = String(heartbeat + "\t</COMPILE_DATE>\n\r");
+
+  heartbeat = String(heartbeat + "\t<COMPILE_TIME>");
+  subString = String(__TIME__);
+  heartbeat = String(heartbeat + subString);
+  heartbeat = String(heartbeat + "\t</COMPILE_TIME>\n\r");    
+
   heartbeat = String(heartbeat + "</GADGET_MESSAGE>\n\r");
 
   messageId += 1;

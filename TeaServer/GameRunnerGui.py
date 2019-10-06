@@ -191,7 +191,7 @@ class GameRunnerGui:
     def get_index_of_current_state(self):
         return self.index_of_current_state
 
-    def update_wand_status(self, message_id, wand_id, wand_state, wand_ip):
+    def update_wand_status(self, message_id, wand_id, wand_state, compile_date, compile_time, wand_ip):
         if wand_id not in attendees:
             print("got unidentified wand heartbeat {}, {}, {}".format(message_id, wand_id, wand_state))
             return
@@ -200,7 +200,7 @@ class GameRunnerGui:
             if wandGuiLine.gadget_name == wand_id:
                 wandGuiLine.heartbeat_received()
                 wandGuiLine.update_row_status(new_status=wand_state)
-                wandGuiLine.update_ip_address(wand_ip)
+                wandGuiLine.update_hw_info(wand_ip, compile_date, compile_time)
                 break
 
 
@@ -247,16 +247,16 @@ class GadgetStatus:
         self.gadget_ip = "Unknown"
         self.time_of_last_heartbeat = time_of_last_heartbeat
 
-        self.gadget_name_text = tkinter.Label(root, text=(gadget_name + gadget_suffix), borderwidth=2, relief="groove", width=15, anchor="nw")
+        self.gadget_name_text = tkinter.Label(root, text=(gadget_name + gadget_suffix), borderwidth=2, relief="groove", width=14, anchor="nw")
         self.gadget_name_text.grid(row=self.index, column=0)
 
-        self.gadget_ip_text = tkinter.Label(root, text=self.gadget_ip, relief="groove", width=15, anchor="nw")
+        self.gadget_ip_text = tkinter.Label(root, text=self.gadget_ip, relief="groove", width=28, anchor="nw")
         self.gadget_ip_text.grid(row=self.index, column=1)
 
-        self.gadget_status_text = tkinter.Label(root, text="uninitialized", borderwidth=2, relief="groove", width=11, anchor="nw")
+        self.gadget_status_text = tkinter.Label(root, text="uninitialized", borderwidth=2, relief="groove", width=10, anchor="nw")
         self.gadget_status_text.grid(row=self.index, column=2)
 
-        self.gadget_last_heard_from_text = tkinter.Label(root, text=round(time_of_last_heartbeat, 0), borderwidth=2, relief="groove", width=15, anchor="nw")
+        self.gadget_last_heard_from_text = tkinter.Label(root, text=round(time_of_last_heartbeat, 0), borderwidth=2, relief="groove", width=6, anchor="nw")
         self.gadget_last_heard_from_text.grid(row=self.index, column=3)
 
         self.update_row_color()
@@ -282,9 +282,10 @@ class GadgetStatus:
     def update_row_status(self, new_status):
         self.gadget_status_text.config({"text": new_status})
 
-    def update_ip_address(self, ip_addr):
+    def update_hw_info(self, ip_addr, compile_date, compile_time):
         self.gadget_ip = ip_addr
-        self.gadget_ip_text.config({"text": self.gadget_ip})
+        info_text = "{}  ({} {})".format(self.gadget_ip, compile_date, compile_time)
+        self.gadget_ip_text.config({"text": info_text})
 
     def update_time_box(self):
         time_since_last_heartbeat = time.time() - self.time_of_last_heartbeat
