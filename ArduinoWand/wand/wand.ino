@@ -11,7 +11,9 @@ enum GameState
 
 
 
-String currentState = "UNKNOWN";
+GameState currentState;
+String currentStateString;
+bool stateChanged = false;
 
 int lastProcessedMessageId = -1;
 
@@ -67,7 +69,6 @@ void loop()
   bool gameStateIsValid;
   int messageId;
   int messageCount;
-  GameState latestState;
   bool wandIsGettingMoved;
   int currentTime;
 
@@ -110,7 +111,7 @@ void loop()
     }
   
     
-    gameStateIsValid = GetGameState(messageId, messageCount, latestState);
+    gameStateIsValid = GetGameState(messageId, messageCount, currentState);
   
     if (gameStateIsValid)
     {
@@ -119,72 +120,15 @@ void loop()
       if (messageId == lastProcessedMessageId)
       {
         // already handled this state - do nothing.
+        stateChanged = false;
       }
       else
       {
-        switch(latestState)
-        {
-          case UNKNOWN_GAME_STATE:
-            Serial.println("Uh-oh!!!!! We are in an unknown state!!!");
-            break;
-            
-          case WAITING_TO_START:
-            Serial.println("WAITING_TO_START");
-            SetLedColor(255, 0, 0);
-            lastProcessedMessageId = messageId;
-            break;
-  
-          case AT_ATTENTION:
-            Serial.println("AT_ATTENTION");
-            SetLedColor(0, 255, 0);
-            lastProcessedMessageId = messageId;
-            break;          
-          
-          case SMOKING:
-            Serial.println("SMOKING");
-            SetLedColor(0, 0, 255);
-            lastProcessedMessageId = messageId;
-            break;
-          
-          case REGINAS_WARNING:
-            Serial.println("REGINAS_WARNING");
-            SetLedColor(255, 255, 255);
-            lastProcessedMessageId = messageId;
-            break;
-          
-          case WANDS_AT_THE_READY:
-            Serial.println("WANDS_AT_THE_READY");
-  
-            for (int j = 0; j < 5; j++)
-            {
-              SetBuzzer(2, 1);
-              SetBuzzer(3, 0);
-              delay(1000);
-    
-              SetBuzzer(2, 0);
-              SetBuzzer(3, 0);
-              delay(250);
-    
-              SetBuzzer(2, 0);
-              SetBuzzer(3, 1);
-              delay(1000);
-    
-              SetBuzzer(2, 0);
-              SetBuzzer(3, 0);
-              delay(250);
-            }
-            
-  
-  
-            lastProcessedMessageId = messageId;
-            break;
-          
-          case CHECK_FOR_POISONING:
-            Serial.println("CHECK_FOR_POISONING");
-            lastProcessedMessageId = messageId;
-            break;
-        }
+        stateChanged = true;
       }
+
+      lastProcessedMessageId = messageId;
+      
     }
     else
     {
@@ -202,5 +146,7 @@ void loop()
         }
       }
     }
+
+    ServiceCurrentState();
   }
 }

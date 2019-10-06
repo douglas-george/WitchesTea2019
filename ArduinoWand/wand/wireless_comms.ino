@@ -180,7 +180,7 @@ void FormHeartbeat(String& heartbeat)
   heartbeat = String(heartbeat + "\t</MESSAGE_ID>\n\r");
 
   heartbeat = String(heartbeat + "\t<GADGET_STATE>");
-  subString = String(currentState);
+  subString = String(currentStateString);
   heartbeat = String(heartbeat + subString);
   heartbeat = String(heartbeat + "\t</GADGET_STATE>\n\r");
 
