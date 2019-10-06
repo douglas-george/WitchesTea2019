@@ -5,8 +5,7 @@ import time
 # and each client contains mDNS name and the path to .bin file
 #I only have 1 ESP so I duplicate mDNS entry for testing
 esps = [
-  #mDNS name of ESP   #absolute path to ".bin" file
-    #['esp32.local', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.250', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
     ['192.168.5.142', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
 ]
 

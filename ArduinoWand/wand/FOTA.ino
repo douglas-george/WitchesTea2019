@@ -21,17 +21,21 @@ void InitFOTA() {
   /* this callback function will be invoked when updating start */
   ArduinoOTA.onStart([]() {
     Serial.println("Start updating");
+    fotaInProgress = true;
+    timeOfLastFotaActivity = millis();
   });
 
   /* this callback function will be invoked when updating end */
   ArduinoOTA.onEnd([]() {
     Serial.println("\nEnd updating");
+    fotaInProgress = false;
   });
   
   /* this callback function will be invoked when a number of chunks of software was flashed
   so we can use it to calculate the progress of flashing */
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    Serial.printf("Progress: %u%%\r\n", (progress / (total / 100)));
+    timeOfLastFotaActivity = millis();
   });
 
   /* this callback function will be invoked when updating error */

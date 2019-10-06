@@ -29,6 +29,9 @@ int movementCounts = 0;
 int motionCheckPeriod = 1500;
 double requisiteMovementPercentage = 0.55;
 
+bool fotaInProgress = false;
+int timeOfLastFotaActivity;
+
 
 void setup()
 {
@@ -71,95 +74,132 @@ void loop()
   currentTime = millis();
   LoopCounts += 1;
 
+  
   serviceFOTA();
 
-  SendHeartbeatIfNeeded();
-
-  wandIsGettingMoved = ServiceImu();
-  if (wandIsGettingMoved)
+  if (fotaInProgress)
   {
-    movementCounts++;
-  }
-
-  if (currentTime > timeOfNextInterval)
-  {
-    double movementPercentage = double(movementCounts) / double(LoopCounts);
-    if (movementPercentage > requisiteMovementPercentage)
+    if (millis() > (timeOfLastFotaActivity + 5000))
     {
-      Serial.print("Last second there were ");
-      Serial.print(movementCounts);
-      Serial.print(" / ");
-      Serial.println(LoopCounts);
-    }
-    LoopCounts = 0;
-    movementCounts = 0;
-    timeOfNextInterval = currentTime + motionCheckPeriod;
-  }
-
-  
-  gameStateIsValid = GetGameState(messageId, messageCount, latestState);
-
-  if (gameStateIsValid)
-  {
-    timeOfLastHeartbeatRx = currentTime;
-    
-    if (messageId == lastProcessedMessageId)
-    {
-      // already handled this state - do nothing.
-    }
-    else
-    {
-      switch(latestState)
-      {
-        case UNKNOWN_GAME_STATE:
-          Serial.println("Uh-oh!!!!! We are in an unknown state!!!");
-          break;
-          
-        case WAITING_TO_START:
-          Serial.println("WAITING_TO_START");
-          lastProcessedMessageId = messageId;
-          break;
-
-        case AT_ATTENTION:
-          Serial.println("AT_ATTENTION");
-          lastProcessedMessageId = messageId;
-          break;          
-        
-        case SMOKING:
-          Serial.println("SMOKING");
-          lastProcessedMessageId = messageId;
-          break;
-        
-        case REGINAS_WARNING:
-          Serial.println("REGINAS_WARNING");
-          lastProcessedMessageId = messageId;
-          break;
-        
-        case WANDS_AT_THE_READY:
-          Serial.println("WANDS_AT_THE_READY");
-          lastProcessedMessageId = messageId;
-          break;
-        
-        case CHECK_FOR_POISONING:
-          Serial.println("CHECK_FOR_POISONING");
-          lastProcessedMessageId = messageId;
-          break;
-      }
+      fotaInProgress = false;
     }
   }
   else
   {
-    if (currentTime - timeOfLastMissedHeartbeatWarning > 5000)
+    SendHeartbeatIfNeeded();
+  
+    wandIsGettingMoved = ServiceImu();
+    if (wandIsGettingMoved)
     {
-      int timeSinceLastHeartbeatRx = currentTime - timeOfLastHeartbeatRx;
-      if (timeSinceLastHeartbeatRx > 5000)
+      movementCounts++;
+    }
+  
+    if (currentTime > timeOfNextInterval)
+    {
+      double movementPercentage = double(movementCounts) / double(LoopCounts);
+      if (movementPercentage > requisiteMovementPercentage)
       {
-        double printTime = timeSinceLastHeartbeatRx / 1000.0;
-        
-        Serial.print("Warning, it has been over ");
-        Serial.print(printTime);
-        Serial.println(" seconds without hearing a heartbeat from the game server!!!!");
-        timeOfLastMissedHeartbeatWarning = currentTime;
+        Serial.print("Last second there were ");
+        Serial.print(movementCounts);
+        Serial.print(" / ");
+        Serial.println(LoopCounts);
+      }
+      LoopCounts = 0;
+      movementCounts = 0;
+      timeOfNextInterval = currentTime + motionCheckPeriod;
+    }
+  
+    
+    gameStateIsValid = GetGameState(messageId, messageCount, latestState);
+  
+    if (gameStateIsValid)
+    {
+      timeOfLastHeartbeatRx = currentTime;
+      
+      if (messageId == lastProcessedMessageId)
+      {
+        // already handled this state - do nothing.
+      }
+      else
+      {
+        switch(latestState)
+        {
+          case UNKNOWN_GAME_STATE:
+            Serial.println("Uh-oh!!!!! We are in an unknown state!!!");
+            break;
+            
+          case WAITING_TO_START:
+            Serial.println("WAITING_TO_START");
+            SetLedColor(255, 0, 0);
+            lastProcessedMessageId = messageId;
+            break;
+  
+          case AT_ATTENTION:
+            Serial.println("AT_ATTENTION");
+            SetLedColor(0, 255, 0);
+            lastProcessedMessageId = messageId;
+            break;          
+          
+          case SMOKING:
+            Serial.println("SMOKING");
+            SetLedColor(0, 0, 255);
+            lastProcessedMessageId = messageId;
+            break;
+          
+          case REGINAS_WARNING:
+            Serial.println("REGINAS_WARNING");
+            SetLedColor(255, 255, 255);
+            lastProcessedMessageId = messageId;
+            break;
+          
+          case WANDS_AT_THE_READY:
+            Serial.println("WANDS_AT_THE_READY");
+  
+            for (int j = 0; j < 5; j++)
+            {
+              SetBuzzer(2, 1);
+              SetBuzzer(3, 0);
+              delay(1000);
+    
+              SetBuzzer(2, 0);
+              SetBuzzer(3, 0);
+              delay(250);
+    
+              SetBuzzer(2, 0);
+              SetBuzzer(3, 1);
+              delay(1000);
+    
+              SetBuzzer(2, 0);
+              SetBuzzer(3, 0);
+              delay(250);
+            }
+            
+  
+  
+            lastProcessedMessageId = messageId;
+            break;
+          
+          case CHECK_FOR_POISONING:
+            Serial.println("CHECK_FOR_POISONING");
+            lastProcessedMessageId = messageId;
+            break;
+        }
+      }
+    }
+    else
+    {
+      if (currentTime - timeOfLastMissedHeartbeatWarning > 5000)
+      {
+        int timeSinceLastHeartbeatRx = currentTime - timeOfLastHeartbeatRx;
+        if (timeSinceLastHeartbeatRx > 5000)
+        {
+          double printTime = timeSinceLastHeartbeatRx / 1000.0;
+          
+          Serial.print("Warning, it has been over ");
+          Serial.print(printTime);
+          Serial.println(" seconds without hearing a heartbeat from the game server!!!!");
+          timeOfLastMissedHeartbeatWarning = currentTime;
+        }
       }
     }
   }

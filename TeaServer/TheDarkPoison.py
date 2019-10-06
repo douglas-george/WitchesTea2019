@@ -9,7 +9,7 @@ from TeaServer.ServerListenerLink import SmokerListener, WandListener
 class TheDarkPoison:
     def __init__(self):
         self.gui = GameRunnerGui()
-        self.announcer = TeaAnnouncer(time_between_heartbeats=1, current_game_state=game_states[0][0])
+        self.announcer = TeaAnnouncer(time_between_heartbeats=0.1, current_game_state=game_states[0][0])
         self.smoker_listener = SmokerListener()
         self.wand_listener = WandListener()
 
