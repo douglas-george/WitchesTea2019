@@ -23,6 +23,8 @@ void InitComms(void)
   Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
 
+  InitFOTA();
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println(".");
@@ -147,7 +149,7 @@ void SendHeartbeat(void)
     FormHeartbeat(heartbeat);
     stringLength = heartbeat.length();
 
-    Serial.println("Transmitting Heartbeat!");
+    Serial.println("Transmitting Heartbeat!!!!!!!!!!!!!!!!");
     
     outgoing_udp.beginPacket(GADGET_BCAST_ADDR, WAND_PORT);
     outgoing_udp.write((const uint8_t*)heartbeat.c_str(), stringLength);
@@ -180,7 +182,7 @@ void FormHeartbeat(String& heartbeat)
   heartbeat = String(heartbeat + "\t<GADGET_STATE>");
   subString = String(currentState);
   heartbeat = String(heartbeat + subString);
-  heartbeat = String(heartbeat + "\t</GADGET_STATE>\n\r");  
+  heartbeat = String(heartbeat + "\t</GADGET_STATE>\n\r");
 
   heartbeat = String(heartbeat + "</GADGET_MESSAGE>\n\r");
 

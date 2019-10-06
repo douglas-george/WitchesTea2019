@@ -11,7 +11,7 @@ enum GameState
 
 
 
-const char* WAND_OWNER = "Doug";
+const char* WAND_OWNER = "Delta";
 
 String currentState = "UNKNOWN";
 
@@ -64,6 +64,8 @@ void loop()
 
   currentTime = millis();
   LoopCounts += 1;
+
+  serviceFOTA();
 
   SendHeartbeatIfNeeded();
 

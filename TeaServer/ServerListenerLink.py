@@ -22,7 +22,12 @@ class ServerListenerLink:
     def service_server(self):
         while True:
             try:
-                return_data = self.socket.recv(1024).decode("utf-8")
+                #return_data = self.socket.recv(1024).decode("utf-8")
+                return_data, sender_info = self.socket.recvfrom(1024)
+                sender_ip, sender_port = sender_info
+                return_data = return_data.decode("utf-8")
+                print("Got it from {}".format(sender_ip))
+
             except BlockingIOError:
                 break
 
@@ -34,7 +39,7 @@ class ServerListenerLink:
                     self.message_being_received = GadgetMessage()
                     self.message_being_received.decode(new_data=trailing_data)
 
-                    return newMessage
+                    return newMessage, sender_ip
 
         return None
 
@@ -62,11 +67,12 @@ class WandListener(ServerListenerLink):
         super().__init__(gadget_port=self.WAND_PORT)
 
     def service_wands(self):
-        msg = self.service_server()
+        results = self.service_server()
 
-        if msg is not None:
+        if results is not None:
+            msg, sender_ip = results
             if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT"):
-                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_ID"].strip(), msg.data["GADGET_STATE"].strip())
+                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_ID"].strip(), msg.data["GADGET_STATE"].strip(), sender_ip)
 
         return None
 

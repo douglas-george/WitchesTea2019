@@ -47,6 +47,7 @@ void InitBuzzers(void)
 }
 
 
+// Buzzer 2 and 3 are hooked up
 void SetBuzzer(uint8_t buzzerIndex, uint8_t turnOn)
 {
   if (buzzerIndex == 1)
@@ -54,10 +55,13 @@ void SetBuzzer(uint8_t buzzerIndex, uint8_t turnOn)
     if (turnOn == 1)
     {
       digitalWrite (buzz1, HIGH);
+      Serial.println("Buzz1 High");
     }
     else
     {
       digitalWrite (buzz1, LOW);
+      Serial.println("Buzz1 Low");
+      
     }
   }
 
@@ -66,10 +70,12 @@ void SetBuzzer(uint8_t buzzerIndex, uint8_t turnOn)
     if (turnOn == 1)
     {
       digitalWrite (buzz2, HIGH);
+      Serial.println("Buzz2 High");
     }
     else
     {
       digitalWrite (buzz2, LOW);
+      Serial.println("Buzz2 Low");
     }
   }
 
@@ -79,10 +85,12 @@ void SetBuzzer(uint8_t buzzerIndex, uint8_t turnOn)
     if (turnOn == 1)
     {
       digitalWrite (buzz3, HIGH);
+      Serial.println("Buzz3 High");
     }
     else
     {
       digitalWrite (buzz3, LOW);
+      Serial.println("Buzz3 Low");
     }
   }
 

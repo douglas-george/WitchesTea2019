@@ -148,7 +148,7 @@ if __name__ == "__main__":
                        ingredientList=[Ingredient.D3_MOONDEW, Ingredient.D5_LACEWINGS, Ingredient.D6_BULBADOX_JUICE])
 
     dessert5 = Dessert(dessertName="Dessert5",
-                       ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D3_MOONDEW])
+                       ingredientList=[Ingredient.D1_BANEBERRY, Ingredient.D9_DRAGONFLY_THORAX])
 
     dessert6 = Dessert(dessertName="Dessert6",
                        ingredientList=[Ingredient.D8_PEARL_DUST])
