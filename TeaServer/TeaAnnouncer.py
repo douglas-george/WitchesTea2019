@@ -32,6 +32,7 @@ class TeaAnnouncer:
         current_time = time.time()
         if current_time > (self.time_of_last_heartbeat + self.time_between_heartbeats):
             # send heartbeat
+            print('game beat')
             heartbeat = GameHeartbeat(gadget_id=self.gadget_id,
                                       message_id=self.current_message_id,
                                       message_count=self.current_message_count,

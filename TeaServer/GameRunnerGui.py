@@ -38,10 +38,10 @@ class GameRunnerGui:
         self.column2.grid(row=0, column=2)
 
         # rows 0 & 1: smoker status line
-        self.smokerLabel = tkinter.Label(self.column2, text="Smoker Status", borderwidth=2, relief="groove",
+        self.smokerLabel = tkinter.Label(self.column2, text="PiHat Status", borderwidth=2, relief="groove",
                                          width=60)
         self.smokerLabel.grid(row=0, column=0, columnspan=4)
-        self.smokerStatus = GadgetStatus(gadget_name="Smoker", gadget_suffix="", index=1, root=self.column2,
+        self.smokerStatus = GadgetStatus(gadget_name="PiHat", gadget_suffix="", index=1, root=self.column2,
                                          time_of_last_heartbeat=time.time())
 
         # row 2: empty

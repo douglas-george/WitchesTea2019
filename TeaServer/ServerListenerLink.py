@@ -43,13 +43,28 @@ class ServerListenerLink:
         return None
 
 
-class SmokerListener(ServerListenerLink):
+class TableListener(ServerListenerLink):
     SMOKER_PORT = 10108
 
     def __init__(self):
         super().__init__(gadget_port=self.SMOKER_PORT)
 
     def service_smoker(self):
+        msg = self.service_server()
+
+        if msg is not None:
+            if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT") and (msg.data["GADGET_ID"] == "SMOKER"):
+                return (msg.data["MESSAGE_ID"].strip(), msg.data["GADGET_STATE"].strip())
+
+        return None
+
+class FireplaceListener(ServerListenerLink):
+    FIREPLACE_PORT = 10110
+
+    def __init__(self):
+        super().__init__(gadget_port=self.FIREPLACE_PORT)
+
+    def service_fireplace(self):
         msg = self.service_server()
 
         if msg is not None:

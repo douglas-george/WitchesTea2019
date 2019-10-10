@@ -3,14 +3,15 @@ from TeaServer.TeaScript import attendees
 from TeaServer.TeaScript import game_states
 from TeaServer.GameRunnerGui import GameRunnerGui
 from TeaServer.TeaAnnouncer import TeaAnnouncer
-from TeaServer.ServerListenerLink import SmokerListener, WandListener
+from TeaServer.ServerListenerLink import TableListener, WandListener
 
 
 class TheDarkPoison:
     def __init__(self):
         self.gui = GameRunnerGui()
         self.announcer = TeaAnnouncer(time_between_heartbeats=0.1, current_game_state=game_states[0][0])
-        self.smoker_listener = SmokerListener()
+        self.smoker_listener = TableListener()
+        self.fireplace_listener = FireplaceListener()
         self.wand_listener = WandListener()
 
     def run(self):
@@ -28,6 +29,11 @@ class TheDarkPoison:
             if smoker_data is not None:
                 smoker_heartbeat_id, smoker_state = smoker_data
                 self.gui.smokerStatus.heartbeat_received()
+
+            fireplace_data = self.fireplace_listener.service_fireplace()
+            if fireplace_data is not None:
+                fireplace_heartbeat_id, fireplace_state = smoker_data
+                self.gui.ReginaFireplaceStatus.heartbeat_received()
 
             wand_data = self.wand_listener.service_wands()
             if wand_data is not None:

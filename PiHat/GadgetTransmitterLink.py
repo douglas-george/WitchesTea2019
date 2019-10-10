@@ -37,7 +37,7 @@ class GadgetTransmitterLink:
 
 
 if __name__ == "__main__":
-    client = GadgetTransmitterLink(host_address="192.168.5.177", host_port=10101, heartbeat_rate=5.0, client_id="Smoker")
+    client = GadgetTransmitterLink(host_address="192.168.5.177", host_port=10101, heartbeat_rate=5.0, client_id="PiHat")
 
     while True:
         client.service()
