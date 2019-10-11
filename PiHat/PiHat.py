@@ -17,7 +17,7 @@ class PiHat:
         self.time_of_last_game_update = time.time()
         self.time_of_last_heartbeat_warning = time.time()
 
-        self.current_gadget_state = "UNKNOWN"
+        self.current_gadget_state = "I dunno"
 
     def check_for_heartbeat(self):
         msg = self.listener_link.service_gadget_listener()

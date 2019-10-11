@@ -46,6 +46,9 @@ class GadgetMessage():
             self.data[starting_tag] = tag_value
             data_str = after_str.strip()
 
+    def __str__(self):
+        return self.encode()
+
 
 class GadgetHeartbeat(GadgetMessage):
     def __init__(self, gadget_id, heartbeat_id, gadget_state):

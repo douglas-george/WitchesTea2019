@@ -38,10 +38,10 @@ class GameRunnerGui:
         self.column2.grid(row=0, column=2)
 
         # rows 0 & 1: smoker status line
-        self.smokerLabel = tkinter.Label(self.column2, text="PiHat Status", borderwidth=2, relief="groove",
+        self.smokerLabel = tkinter.Label(self.column2, text="Table Status", borderwidth=2, relief="groove",
                                          width=60)
         self.smokerLabel.grid(row=0, column=0, columnspan=4)
-        self.smokerStatus = GadgetStatus(gadget_name="PiHat", gadget_suffix="", index=1, root=self.column2,
+        self.table_status = GadgetStatus(gadget_name="PiHat", gadget_suffix="", index=1, root=self.column2,
                                          time_of_last_heartbeat=time.time())
 
         # row 2: empty
@@ -131,8 +131,8 @@ class GameRunnerGui:
             wandGuiLine.update_time_box()
             wandGuiLine.update_row_color()
 
-        self.smokerStatus.update_row_color()
-        self.smokerStatus.update_time_box()
+        self.table_status.update_row_color()
+        self.table_status.update_time_box()
 
         self.ReginaFireplaceStatus.update_row_color()
         self.ReginaFireplaceStatus.update_time_box()
@@ -264,6 +264,7 @@ class GadgetStatus:
     def heartbeat_received(self):
         self.time_of_last_heartbeat = time.time()
 
+
     def update_row_color(self):
         time_since_last_heartbeat = time.time() - self.time_of_last_heartbeat
 
@@ -284,7 +285,10 @@ class GadgetStatus:
 
     def update_hw_info(self, ip_addr, compile_date, compile_time):
         self.gadget_ip = ip_addr
-        info_text = "{}  ({} {})".format(self.gadget_ip, compile_date, compile_time)
+        if compile_date is not None and compile_time is not None:
+            info_text = "{}  ({} {})".format(self.gadget_ip, compile_date, compile_time)
+        else:
+            info_text = "{}".format(self.gadget_ip)
         self.gadget_ip_text.config({"text": info_text})
 
     def update_time_box(self):
