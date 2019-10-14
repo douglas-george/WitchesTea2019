@@ -11,7 +11,7 @@ class GameRunnerGui:
         self.index_of_current_state = 0
 
         columnWidth = 475
-        columnHeight = 750
+        columnHeight = 800
 
         # ----------------------- column 0 - wand status lines-------------------------------------
         self.column0 = tkinter.Frame(self.root, relief=tkinter.SUNKEN, borderwidth=25, height=columnHeight, width=columnWidth)
@@ -173,11 +173,11 @@ class GameRunnerGui:
 
         for i, gameStatusLine in enumerate(self.gameStatusLines):
             if i < self.index_of_current_state:
-                gameStatusLine.update_status(new_status=GameState.GAME_STATE_PENDING)
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_DONE, offset=self.index_of_current_state - i)
             elif i == self.index_of_current_state:
-                gameStatusLine.update_status(new_status=GameState.GAME_STATE_ACTIVE)
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_ACTIVE, offset=self.index_of_current_state - i)
             else:
-                gameStatusLine.update_status(new_status=GameState.GAME_STATE_DONE)
+                gameStatusLine.update_status(new_status=GameState.GAME_STATE_PENDING, offset=self.index_of_current_state - i)
 
         self.CurrentStateDescription.delete('1.0', tkinter.END)
         self.NextStateDescription.delete('1.0', tkinter.END)
@@ -217,25 +217,37 @@ class GameState:
         self.status = status
 
         self.state_name_text = tkinter.Label(root, text=state_name, borderwidth=2, relief="groove", width=58,
-                                            anchor="nw")
+                                            anchor="nw", font=("Helvetica", 4))
         self.state_name_text.grid(row=self.index, column=0, columnspan=3)
 
-        self.format_row_based_on_status()
+        self.format_row_based_on_status(offset=None)
 
-    def update_status(self, new_status):
+    def update_status(self, new_status, offset):
         self.status = new_status
-        self.format_row_based_on_status()
+        self.format_row_based_on_status(offset=offset)
 
-    def format_row_based_on_status(self):
+    def format_row_based_on_status(self, offset):
+        if (offset is None):
+            fontSize = 4
+        elif abs(offset) == 0:
+            fontSize = 10
+        elif abs(offset) < 2:
+            fontSize = 9
+        elif abs(offset) < 5:
+            fontSize = 8
+        else:
+            fontSize = 3
+
+
 
         if self.status == self.GAME_STATE_DONE:
-            self.state_name_text.config({"background": "#96EAFF", "foreground": "#20ABDA"})
+            self.state_name_text.config({"background": "#96EAFF", "foreground": "#20ABDA", "font": ("Helvetica", fontSize)})
 
         elif self.status == self.GAME_STATE_ACTIVE:
-            self.state_name_text.config({"background": "#00FF0A"})
+            self.state_name_text.config({"background": "#00FF0A", "font": ("Helvetica", fontSize)})
 
         else:
-            self.state_name_text.config({"background": "#FFFFA0"})
+            self.state_name_text.config({"background": "#FFFFA0", "font": ("Helvetica", fontSize)})
 
 
 class GadgetStatus:

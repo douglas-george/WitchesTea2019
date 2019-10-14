@@ -91,36 +91,58 @@ bool GetGameState(int& messageId, int& messageCount, GameState& currentState)
     tagName = String("GAME_STATE");
     String gameState = parseOutTag(fullStr, tagName);
 
-    if (gameState == String("WAITING TO START"))
-    {
-      currentState = WAITING_TO_START;
-      return true;
-    }
-    else if (gameState == String("AT ATTENTION"))
-    {
-      currentState = AT_ATTENTION;
-      return true;
-    }
-    else if (gameState == String("SMOKING"))
-    {
-      currentState = SMOKING;
-      return true;
-    }
-    else if (gameState == String("REGINA'S WARNING"))
-    {
-      currentState = REGINAS_WARNING;
-      return true;
-    }
-    else if (gameState == String("WANDS AT THE READY"))
-    {
-      currentState = WANDS_AT_THE_READY;
-      return true;
-    }
-    else if (gameState == String("CHECK FOR POISONING"))
-    {
-      currentState = CHECK_FOR_POISONING;
-      return true;
-    }
+    if      (gameState == String("SETTING_UP"))                                         {currentState = SETTING_UP;                                         return true; }
+    else if (gameState == String("FAMILY_PICTURES"))                                    {currentState = FAMILY_PICTURES;                                    return true; }
+    else if (gameState == String("GROUP_PICTURES"))                                     {currentState = GROUP_PICTURES;                                     return true; }
+    else if (gameState == String("REGINA_ARRIVES"))                                     {currentState = REGINA_ARRIVES;                                     return true; }
+    else if (gameState == String("REGINA_EXPLAINS"))                                    {currentState = REGINA_EXPLAINS;                                    return true; }
+    else if (gameState == String("DINNER"))                                             {currentState = DINNER;                                             return true; }
+    else if (gameState == String("FOGGER_WARMUP"))                                      {currentState = FOGGER_WARMUP;                                      return true; }
+    else if (gameState == String("FOGGER_COUNTDOWN"))                                   {currentState = FOGGER_COUNTDOWN;                                   return true; }
+    else if (gameState == String("POISONING"))                                          {currentState = POISONING;                                          return true; }
+    else if (gameState == String("EVIL_ANNOUNCEMENT"))                                  {currentState = EVIL_ANNOUNCEMENT;                                  return true; }
+    else if (gameState == String("CAST_PROHIBERE"))                                     {currentState = CAST_PROHIBERE;                                     return true; }
+    else if (gameState == String("WAIT_ON_PROHIBERE"))                                  {currentState = WAIT_ON_PROHIBERE;                                  return true; }
+    else if (gameState == String("FOGGER_OFF"))                                         {currentState = FOGGER_OFF;                                         return true; }
+    else if (gameState == String("REGINAS_PLAN"))                                       {currentState = REGINAS_PLAN;                                       return true; }
+    else if (gameState == String("SPELL_BOOKS_APPEAR"))                                 {currentState = SPELL_BOOKS_APPEAR;                                 return true; }
+    else if (gameState == String("PASS_OUT_BOOKS"))                                     {currentState = PASS_OUT_BOOKS;                                     return true; }
+    else if (gameState == String("ANTIDOTE_EXPLANATION"))                               {currentState = ANTIDOTE_EXPLANATION;                               return true; }
+    else if (gameState == String("REGINA_SUGGESTS_PUMPKIN_CAKE"))                       {currentState = REGINA_SUGGESTS_PUMPKIN_CAKE;                       return true; }
+    else if (gameState == String("EATING_PUMPKIN_CAKE"))                                {currentState = EATING_PUMPKIN_CAKE;                                return true; }
+    else if (gameState == String("CAST_AFFLICTO"))                                      {currentState = CAST_AFFLICTO;                                      return true; }
+    else if (gameState == String("WAIT_ON_AFFLICTO"))                                   {currentState = WAIT_ON_AFFLICTO;                                   return true; }
+    else if (gameState == String("REGINA_SAYS_YOU_ARE_POISONED"))                       {currentState = REGINA_SAYS_YOU_ARE_POISONED;                       return true; }
+    else if (gameState == String("REGINA_ASKS_IF_YOU_HAVE_DESERT_TOAD"))                {currentState = REGINA_ASKS_IF_YOU_HAVE_DESERT_TOAD;                return true; }
+    else if (gameState == String("WAIT_TO_FIND_TOAD"))                                  {currentState = WAIT_TO_FIND_TOAD;                                  return true; }
+    else if (gameState == String("REGINA_SAYS_THE_BRAVEST_MUST_EAT_IT"))                {currentState = REGINA_SAYS_THE_BRAVEST_MUST_EAT_IT;                return true; }
+    else if (gameState == String("CAST_FORTISSIMI"))                                    {currentState = CAST_FORTISSIMI;                                    return true; }
+    else if (gameState == String("WAIT_ON_FORTISSIMI"))                                 {currentState = WAIT_ON_FORTISSIMI;                                 return true; }
+    else if (gameState == String("EAT_TOAD"))                                           {currentState = EAT_TOAD;                                           return true; }
+    else if (gameState == String("REGINA_SUGGESTS_KOUING_AMAN"))                        {currentState = REGINA_SUGGESTS_KOUING_AMAN;                        return true; }
+    else if (gameState == String("EAT_KOUING_AMAN"))                                    {currentState = EAT_KOUING_AMAN;                                    return true; }
+    else if (gameState == String("REGINA_SUGGESTS_POPCORN"))                            {currentState = REGINA_SUGGESTS_POPCORN;                            return true; }
+    else if (gameState == String("EAT_POPCORN"))                                        {currentState = EAT_POPCORN;                                        return true; }
+    else if (gameState == String("REGINA_SUGGESTS_COCKROACH_CLUSTERS"))                 {currentState = REGINA_SUGGESTS_COCKROACH_CLUSTERS;                 return true; }
+    else if (gameState == String("REGINA_EXPLAINS_RISUS_MAGNA"))                        {currentState = REGINA_EXPLAINS_RISUS_MAGNA;                        return true; }
+    else if (gameState == String("CAST_RISUS_MAGNA"))                                   {currentState = CAST_RISUS_MAGNA;                                   return true; }
+    else if (gameState == String("WAIT_ON_RISUS_MAGNA"))                                {currentState = WAIT_ON_RISUS_MAGNA;                                return true; }
+    else if (gameState == String("HYSTERICAL_LAUGHING"))                                {currentState = HYSTERICAL_LAUGHING;                                return true; }
+    else if (gameState == String("REGINA_EXPLAINS_LINGUA_GUSTARE"))                     {currentState = REGINA_EXPLAINS_LINGUA_GUSTARE;                     return true; }
+    else if (gameState == String("CAST_LINGUA_GUSTARE"))                                {currentState = CAST_LINGUA_GUSTARE;                                return true; }
+    else if (gameState == String("WAIT_ON_LINGUA_GUSTARE"))                             {currentState = WAIT_ON_LINGUA_GUSTARE;                             return true; }
+    else if (gameState == String("EAT_CAULDRON_CAKES"))                                 {currentState = EAT_CAULDRON_CAKES;                                 return true; }
+    else if (gameState == String("REGINA_SAYS_FIND_DRAGONFLY_THORAX"))                  {currentState = REGINA_SAYS_FIND_DRAGONFLY_THORAX;                  return true; }
+    else if (gameState == String("NOT_ENOUGH_NEED_THE_BEST_CANTANTA_CANTICUM_SPELL"))   {currentState = NOT_ENOUGH_NEED_THE_BEST_CANTANTA_CANTICUM_SPELL;   return true; }
+    else if (gameState == String("CAST_CANTATA_CANTICUM"))                              {currentState = CAST_CANTATA_CANTICUM;                              return true; }
+    else if (gameState == String("WAIT_ON_CANTATA_CANTICUM"))                           {currentState = WAIT_ON_CANTATA_CANTICUM;                           return true; }
+    else if (gameState == String("EAT_CHOCOLATE_KEYS"))                                 {currentState = EAT_CHOCOLATE_KEYS;                                 return true; }
+    else if (gameState == String("PEDERSENS_SING"))                                     {currentState = PEDERSENS_SING;                                     return true; }
+    else if (gameState == String("REGINA_DEPARTS_IN_A_RUSH_SAYS_USE_DENTIS_FORTIS"))    {currentState = REGINA_DEPARTS_IN_A_RUSH_SAYS_USE_DENTIS_FORTIS;    return true; }
+    else if (gameState == String("CAST_DENTIS_FORTIS"))                                 {currentState = CAST_DENTIS_FORTIS;                                 return true; }
+    else if (gameState == String("WAIT_ON_DENTIS_FORTIS"))                              {currentState = WAIT_ON_DENTIS_FORTIS;                              return true; }
+    else if (gameState == String("EAT_GOLD_ROCKS"))                                     {currentState = EAT_GOLD_ROCKS;                                     return true; }
+    else if (gameState == String("CRAFT_CURE"))                                         {currentState = CRAFT_CURE;                                         return true; }
   }
 
   // didn't receive heartbeat this time
