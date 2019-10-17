@@ -1,13 +1,12 @@
 
 
 attendees = ["Dennis", "Delta",
-             "Bill", "Kali", "Jaron", "Ammon", "Devor",
              "Marika", "Alexis", "Amber", "Isaac",
              "Jessica", "Doug", "Gabriel",
              "Joe", "Barbara", "Carl",
              "Alice", "Jeff", "Braeden", "Carter", "Tanner", "Coleman", "Brynlee",
              "Sam", "Erin", "Sariah", "Emma", "Hyrum",
-             "Courtney", "Hannah", "Luke"]
+             "Sitter1", "Sitter2"]
 
 
 game_states = ( ("SETTING_UP", ""),

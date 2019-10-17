@@ -5,8 +5,32 @@ import time
 # and each client contains mDNS name and the path to .bin file
 #I only have 1 ESP so I duplicate mDNS entry for testing
 esps = [
-    ['192.168.5.250', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
-    ['192.168.5.142', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.125', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.44',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.245', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.148', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.24',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.8',   'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.9',   'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.40',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.249', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.16',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.36',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.117', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.48',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.218', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.160', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.180', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.164', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.133', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.52',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.213', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.41',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.5',   'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.28',  'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.176', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.161', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
+    ['192.168.5.201', 'C:/Users/jay_d/PycharmProjects/WitchesTea2019/ArduinoWand/wand/wand.ino.esp32.bin'],
 ]
 
 ip_of_sender = '192.168.5.177'
@@ -21,4 +45,3 @@ for esp in esps:
     for line in p.stdout.readlines():
         print(line)
     retval = p.wait()
-    time.sleep(10)

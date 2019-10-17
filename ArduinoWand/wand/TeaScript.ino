@@ -227,22 +227,22 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_FORTISSIMI:
-        SetLedColor(0, 0, 255);
+        SetLedColor(255, 125, 0);
         break;
 
       
       case WAIT_ON_RISUS_MAGNA:
-        SetLedColor(0, 255, 255);
+        SetLedColor(125, 255, 0);
         break;
 
       
       case WAIT_ON_LINGUA_GUSTARE:
-        SetLedColor(255, 255, 0);
+        SetLedColor(125, 255, 255);
         break;
 
       
       case WAIT_ON_CANTATA_CANTICUM:
-        SetLedColor(255, 0, 255);
+        SetLedColor(255, 0, 0);
         break;
 
       

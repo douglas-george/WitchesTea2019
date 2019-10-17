@@ -1,7 +1,7 @@
 #include <EEPROM.h>
 
 
-const char* WAND_OWNER_TO_WRITE = "Dennis";
+const char* WAND_OWNER_TO_WRITE = "Sitter2";
 
 #define UPDATE_STORED_WAND_OWNER 0
 
