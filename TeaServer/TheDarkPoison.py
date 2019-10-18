@@ -37,7 +37,7 @@ class TheDarkPoison:
                 fireplace_heartbeat_id, fireplace_state, sender_ip = fireplace_data
                 self.gui.ReginaFireplaceStatus.update_hw_info(ip_addr=sender_ip, compile_date=None, compile_time=None)
                 self.gui.ReginaFireplaceStatus.heartbeat_received()
-                self.gui.ReginaFireplaceStatus.update_row_status(table_state)
+                self.gui.ReginaFireplaceStatus.update_row_status(fireplace_state)
 
             wand_data = self.wand_listener.service_wands()
             if wand_data is not None:
