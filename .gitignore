@@ -1,3 +1,4 @@
 
 *.pyc
 ArduinoWand/wand/wand.ino.esp32.bin
+/venv/
