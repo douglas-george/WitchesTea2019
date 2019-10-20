@@ -3,6 +3,7 @@
 
 
 const char* ssid = "WitchesTea";
+//const char* ssid = "Dave";
 const char* password = "553N280W";
 
 const char* ANNOUNCEMENT_BCAST_ADDR = "192.168.5.255";
