@@ -71,14 +71,14 @@ int timeOfLastHeartbeatRx = millis();
 int timeOfLastMissedHeartbeatWarning = 0;
 
 const int maxOwnerLength = 50;
-char storedWandOwner[maxOwnerLength];
+String storedWandOwner;
 
 bool startWandMotionSampling = false;
 bool wandSamplingInProgress = false;
 double movementPercentage = 0;
 int LoopCounts = 0;
 int movementCounts = 0;
-int motionCheckPeriod = 1500;
+int motionCheckPeriod = 1100;
 
 bool fotaInProgress = false;
 int timeOfLastFotaActivity;

@@ -2,7 +2,7 @@
 #include <WiFiUdp.h>
 
 
-const char* ssid = "Dave";
+const char* ssid = "WitchesTea";
 const char* password = "553N280W";
 
 const char* ANNOUNCEMENT_BCAST_ADDR = "192.168.5.255";
@@ -14,7 +14,7 @@ const int WAND_PORT = 10109;
 WiFiUDP outgoing_udp;
 WiFiUDP incoming_udp;
 
-int heartbeatRate = 1000;
+int heartbeatRate = 2500;
 unsigned long timeOfLastHeartbeatTx = 0;
 
 

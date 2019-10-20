@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
  
 #define PIN     14
-#define N_LEDS  300
+#define N_LEDS  600
 
 enum faceColor
 {
@@ -26,7 +26,7 @@ enum blinkState
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
-blinkState currentState = BLINK_STATE_RED_FIRE;
+blinkState currentState = BLINK_STATE_UNINITIALIZED;
 bool stateChange = true;
 
  
@@ -189,7 +189,7 @@ void ServiceWarmTwinkle(void)
     Serial.println("STATE CHANGE!!!!");
     for (uint16_t ledIndex = 0; ledIndex < N_LEDS; ledIndex++)
     {
-      ledBrightness[ledIndex] = random(0, 4000);
+      ledBrightness[ledIndex] = random(0, 600);
     }
     timeOfNextChange = millis() + 5;
 
@@ -223,7 +223,7 @@ void ServiceWarmTwinkle(void)
       }
 
       ledBrightness[ledIndex]++;
-      if (ledBrightness[ledIndex] > 4000)
+      if (ledBrightness[ledIndex] > 600)
       {
         ledBrightness[ledIndex] = 0;        
       }

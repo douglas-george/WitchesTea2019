@@ -4,6 +4,7 @@ from TeaServer.TeaScript import game_states
 from TeaServer.GameRunnerGui import GameRunnerGui
 from TeaServer.TeaAnnouncer import TeaAnnouncer
 from TeaServer.ServerListenerLink import TableListener, WandListener, FireplaceListener
+import time
 
 
 class TheDarkPoison:
@@ -13,6 +14,8 @@ class TheDarkPoison:
         self.table_listener = TableListener()
         self.fireplace_listener = FireplaceListener()
         self.wand_listener = WandListener()
+
+        self.warmup_time = None
 
     def run(self):
         while True:
@@ -32,6 +35,9 @@ class TheDarkPoison:
                 self.gui.table_status.heartbeat_received()
                 self.gui.table_status.update_row_status(table_state)
 
+                if (table_state == "SNAKE_DONE"):
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
             fireplace_data = self.fireplace_listener.service_fireplace()
             if fireplace_data is not None:
                 fireplace_heartbeat_id, fireplace_state, sender_ip = fireplace_data
@@ -43,6 +49,16 @@ class TheDarkPoison:
             if wand_data is not None:
                 message_id, wand_id, wand_state, compile_date, compile_time, sender_ip = wand_data
                 self.gui.update_wand_status(message_id, wand_id, wand_state, compile_date, compile_time, sender_ip)
+
+            if (game_states[self.gui.get_index_of_current_state()][0] == "FOGGER_WARMUP"):
+                if self.warmup_time is None:
+                    self.warmup_time = time.time()
+                elif time.time() > (self.warmup_time + 15):
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+            else:
+                self.warmup_time = None
+
+
 
 
 

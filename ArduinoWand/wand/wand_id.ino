@@ -1,9 +1,9 @@
-#include <EEPROM.h>
+#include "FS.h"
 
 
-const char* WAND_OWNER_TO_WRITE = "Sitter2";
+const char* WAND_OWNER_TO_WRITE = "Coleman";
 
-#define UPDATE_STORED_WAND_OWNER 0
+#define UPDATE_STORED_WAND_OWNER 1
 
 
 
@@ -14,44 +14,28 @@ void InitWandId(void)
   int i;
   char dataByte;
 
-  EEPROM.begin(maxOwnerLength);
-  
+  SPIFFS.begin();
+    
 #if UPDATE_STORED_WAND_OWNER==1
-  for (int i = 0; i < 50; i++)
-  {
-    EEPROM.write(i, 0);
+  SPIFFS.format();
+
+  File f = SPIFFS.open("/f.txt", "w");
+  if (!f) {
+      Serial.println("file open failed");
   }
-
-  i = 0; 
-  while (i < maxOwnerLength)
-  { 
-    dataByte = WAND_OWNER_TO_WRITE[i];
-    EEPROM.write(i, dataByte);
-
-    if (dataByte == '\0')
-    {
-      break;
-    }
-
-    i++;
-  }
-
-  EEPROM.commit();
-
+  Serial.println("====== Writing to SPIFFS file =========");
+  f.println(WAND_OWNER_TO_WRITE);
+  f.close();
 #endif
 
-  i = 0; 
-  while (i < maxOwnerLength)
-  { 
-    dataByte = EEPROM.read(i);
-
-    storedWandOwner[i] = dataByte;
-
-    if (dataByte == '\0')
-    {
-      break;
-    }
-
-    i++;
+  f = SPIFFS.open("/f.txt", "r");
+  if (!f) 
+  {
+      Serial.println("file open failed");
+  }
+  else
+  {  
+    Serial.println("====== Reading from SPIFFS file =======");
+    storedWandOwner = f.readStringUntil('\n');
   }
 }

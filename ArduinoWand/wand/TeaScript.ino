@@ -195,7 +195,7 @@ void ServiceSpell(void)
     {
       spellComplete = true;
     }
-    else if ((timeInState > 15000) && (movementPercentage > 0.35))
+    else if ((timeInState > 15000) && (movementPercentage > 0.30))
     {
       spellComplete = true;
     }
@@ -203,11 +203,11 @@ void ServiceSpell(void)
     {
       spellComplete = true;
     }
-    else if ((timeInState > 7500) && (movementPercentage > 0.55))
+    else if ((timeInState > 7500) && (movementPercentage > 0.50))
     {
       spellComplete = true;
     }
-    else if (movementPercentage > 0.65)
+    else if (movementPercentage > 0.60)
     {
       spellComplete = true;
     }
@@ -227,7 +227,14 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_FORTISSIMI:
-        SetLedColor(255, 125, 0);
+        if ((storedWandOwner[0] == 'I') &&
+            (storedWandOwner[1] == 's') &&
+            (storedWandOwner[2] == 'a') &&
+            (storedWandOwner[3] == 'a') &&
+            (storedWandOwner[4] == 'c'))
+        {
+          SetLedColor(255, 125, 0);
+        }
         break;
 
       
@@ -242,7 +249,25 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_CANTATA_CANTICUM:
-        SetLedColor(255, 0, 0);
+        if ((storedWandOwner[0] == 'A') &&
+            (storedWandOwner[1] == 'm') &&
+            (storedWandOwner[2] == 'b') &&
+            (storedWandOwner[3] == 'e') &&
+            (storedWandOwner[4] == 'r'))
+        {
+          SetLedColor(255, 0, 0);
+        }        
+        
+        if ((storedWandOwner[0] == 'A') &&
+            (storedWandOwner[1] == 'l') &&
+            (storedWandOwner[2] == 'e') &&
+            (storedWandOwner[3] == 'x') &&
+            (storedWandOwner[5] == 'i') &&
+            (storedWandOwner[6] == 's'))
+        {
+          SetLedColor(255, 0, 0);
+        }
+        
         break;
 
       

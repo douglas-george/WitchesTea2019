@@ -30,6 +30,10 @@ class ServerListenerLink:
             except BlockingIOError:
                 break
 
+            except UnicodeDecodeError:
+                print("Unicode Decode Error from {}".format(sender_ip))
+                break
+
             if len(return_data) > 0:
                 new_message_available, trailing_data = self.message_being_received.decode(new_data=return_data)
 
