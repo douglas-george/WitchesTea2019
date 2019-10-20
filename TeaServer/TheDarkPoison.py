@@ -15,6 +15,8 @@ class TheDarkPoison:
         self.fireplace_listener = FireplaceListener()
         self.wand_listener = WandListener()
 
+        self.time_in_cast_state = None
+
         self.warmup_time = None
 
     def run(self):
@@ -53,8 +55,59 @@ class TheDarkPoison:
             if (game_states[self.gui.get_index_of_current_state()][0] == "FOGGER_WARMUP"):
                 if self.warmup_time is None:
                     self.warmup_time = time.time()
-                elif time.time() > (self.warmup_time + 15):
+                elif time.time() > (self.warmup_time + 360):
                     self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_PROHIBERE"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 10):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_AFFLICTO"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_FORTISSIMI"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_RISUS_MAGNA"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_LINGUA_GUSTARE"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_CANTATA_CANTICUM"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_DENTIS_FORTIS"):
+                if self.time_in_cast_state is None:
+                    self.time_in_cast_state = time.time()
+                elif time.time() > (self.time_in_cast_state + 5):
+                    self.time_in_cast_state = None
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
             else:
                 self.warmup_time = None
 

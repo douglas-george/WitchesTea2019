@@ -109,7 +109,7 @@ void setup()
   Serial.println("Sending first heartbeat.");
   SendHeartbeat();
 
-  Serial.println("Starting main loop...");
+  Serial.println("Starting main loop...................................................................................................");
 }
 
 

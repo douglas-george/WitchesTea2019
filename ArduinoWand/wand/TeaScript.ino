@@ -57,7 +57,7 @@ void ServiceCurrentState(void)
     case CAST_LINGUA_GUSTARE:
     case CAST_CANTATA_CANTICUM:
     case CAST_DENTIS_FORTIS:
-      ServiceBuzzSequence();
+      ServiceBuzzSequence(false);
       break;
 
     case WAIT_ON_PROHIBERE:
@@ -67,7 +67,7 @@ void ServiceCurrentState(void)
     case WAIT_ON_LINGUA_GUSTARE:
     case WAIT_ON_CANTATA_CANTICUM:
     case WAIT_ON_DENTIS_FORTIS:
-      ServiceSpell();
+      ServiceBuzzSequence(ServiceSpell());
       break;
   }
 }
@@ -107,10 +107,17 @@ void ServiceWandIdle(void)
 }
 
 
-void ServiceBuzzSequence(void)
+void ServiceBuzzSequence(bool dontDoBuzz)
 {
   static unsigned long timeOfNextBuzz;
   static uint8_t whichBuzz;
+
+  if (dontDoBuzz)
+  {
+    SetBuzzer(2, false);
+    SetBuzzer(3, false);
+    return;
+  }
   
   if (stateChanged)
   {
@@ -162,13 +169,13 @@ void ServiceBuzzSequence(void)
 }
 
 
-void ServiceSpell(void)
+bool ServiceSpell(void)
 {
   static unsigned long startTime;
   
   unsigned long timeInState;
-  bool spellComplete;
-  bool allDone;
+  static bool spellComplete;
+  static bool allDone;
   
   if (stateChanged)
   {
@@ -220,6 +227,7 @@ void ServiceSpell(void)
       case WAIT_ON_PROHIBERE:
         SetLedColor(0, 255, 0);
         break;
+
       
       case WAIT_ON_AFFLICTO:
         SetLedColor(255, 0, 0);
@@ -227,11 +235,7 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_FORTISSIMI:
-        if ((storedWandOwner[0] == 'I') &&
-            (storedWandOwner[1] == 's') &&
-            (storedWandOwner[2] == 'a') &&
-            (storedWandOwner[3] == 'a') &&
-            (storedWandOwner[4] == 'c'))
+        if (storedWandOwner == "Isaac")
         {
           SetLedColor(255, 125, 0);
         }
@@ -239,7 +243,10 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_RISUS_MAGNA:
-        SetLedColor(125, 255, 0);
+        if ((storedWandOwner == "Sam") || (storedWandOwner == "Erin") || (storedWandOwner == "Sariah") || (storedWandOwner == "Emma") || (storedWandOwner == "Hyrum"))
+        {
+          SetLedColor(125, 255, 0);
+        }
         break;
 
       
@@ -249,21 +256,7 @@ void ServiceSpell(void)
 
       
       case WAIT_ON_CANTATA_CANTICUM:
-        if ((storedWandOwner[0] == 'A') &&
-            (storedWandOwner[1] == 'm') &&
-            (storedWandOwner[2] == 'b') &&
-            (storedWandOwner[3] == 'e') &&
-            (storedWandOwner[4] == 'r'))
-        {
-          SetLedColor(255, 0, 0);
-        }        
-        
-        if ((storedWandOwner[0] == 'A') &&
-            (storedWandOwner[1] == 'l') &&
-            (storedWandOwner[2] == 'e') &&
-            (storedWandOwner[3] == 'x') &&
-            (storedWandOwner[5] == 'i') &&
-            (storedWandOwner[6] == 's'))
+        if ((storedWandOwner == "Alexis") || (storedWandOwner == "Amber"))
         {
           SetLedColor(255, 0, 0);
         }
@@ -278,4 +271,6 @@ void ServiceSpell(void)
 
     allDone = true;
   }
+
+  return allDone;
 }
