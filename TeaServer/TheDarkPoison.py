@@ -5,6 +5,7 @@ from TeaServer.GameRunnerGui import GameRunnerGui
 from TeaServer.TeaAnnouncer import TeaAnnouncer
 from TeaServer.ServerListenerLink import TableListener, WandListener, FireplaceListener
 import time
+from pygame import mixer
 
 
 class TheDarkPoison:
@@ -19,6 +20,34 @@ class TheDarkPoison:
 
         self.warmup_time = None
 
+        self.currentAudioClip = None
+
+        mixer.init()
+
+    def startAudioClip(self, pathToClip):
+        if pathToClip == self.currentAudioClip:
+            return False
+        elif self.currentAudioClip is None:
+            pass
+        else:
+            mixer.stop()
+            time.sleep(1)
+
+        if self.currentAudioClip is None:
+            self.currentAudioClip(pathToClip)
+            mixer.music.load(pathToClip)
+            mixer.music.play()
+
+        return True
+
+    def service_audio(self):
+        if (self.currentAudioClip is not None) and (not mixer.get_busy()):
+            print(self.currentAudioClip + " is done playing")
+            self.currentAudioClip = None
+
+    def audio_busy(self):
+        return self.currentAudioClip is not None
+
     def run(self):
         while True:
             try:
@@ -26,6 +55,8 @@ class TheDarkPoison:
                 state_index = self.gui.get_index_of_current_state()
             except tkinter.TclError:
                 break
+
+            self.service_audio()
 
             self.announcer.update_state(new_game_state=game_states[state_index][0])
             self.announcer.service()
@@ -59,7 +90,19 @@ class TheDarkPoison:
                     self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
 
+            elif (game_states[self.gui.get_index_of_current_state()][0] == "REGINA_EXPLAINS"):
+                if self.audio_busy():
+                    pass
+                else:
+                    self.startAudioClip(pathToClip='./audioClips/ReginaStuckInFireplace.mp3')
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
+
+
+
             elif (game_states[self.gui.get_index_of_current_state()][0] == "CAST_PROHIBERE"):
+                self.startAudioClip(pathToClip='./audioClips/ohNoYouAreGettingPoisonedDoProhiber.mp3')
+
                 if self.time_in_cast_state is None:
                     self.time_in_cast_state = time.time()
                 elif time.time() > (self.time_in_cast_state + 10):
