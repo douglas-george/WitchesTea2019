@@ -57,11 +57,11 @@ class GameRunnerGui:
         # row 5: empty
         self.column2.grid_rowconfigure(5, minsize=15)
 
-        # rows 6 & 7: Speakers line
-        self.SpeakersLabel = tkinter.Label(self.column2, text="Speaker Status",
+        # rows 6 & 7: Clicker line
+        self.ClickerLabel = tkinter.Label(self.column2, text="Clicker Status",
                                            borderwidth=2, relief="groove", width=60)
-        self.SpeakersLabel.grid(row=7, column=0, columnspan=4)
-        self.SpeakerStatus = GadgetStatus(gadget_name="Speakers", gadget_suffix="", index=8, root=self.column2,
+        self.ClickerLabel.grid(row=7, column=0, columnspan=4)
+        self.ClickerStatus = GadgetStatus(gadget_name="Clicker", gadget_suffix="", index=8, root=self.column2,
                                           time_of_last_heartbeat=time.time())
 
         # rows 8,9: empty
@@ -137,8 +137,8 @@ class GameRunnerGui:
         self.ReginaFireplaceStatus.update_row_color()
         self.ReginaFireplaceStatus.update_time_box()
 
-        self.SpeakerStatus.update_row_color()
-        self.SpeakerStatus.update_time_box()
+        self.ClickerStatus.update_row_color()
+        self.ClickerStatus.update_time_box()
 
         self.root.update()
 
@@ -202,7 +202,6 @@ class GameRunnerGui:
                 wandGuiLine.update_row_status(new_status=wand_state)
                 wandGuiLine.update_hw_info(wand_ip, compile_date, compile_time)
                 break
-
 
 
 class GameState:
@@ -273,6 +272,8 @@ class GadgetStatus:
 
         self.update_row_color()
 
+        self.last_gadget_status = ""
+
     def heartbeat_received(self):
         self.time_of_last_heartbeat = time.time()
 
@@ -280,9 +281,9 @@ class GadgetStatus:
     def update_row_color(self):
         time_since_last_heartbeat = time.time() - self.time_of_last_heartbeat
 
-        if time_since_last_heartbeat < 2:
+        if time_since_last_heartbeat < 5:
             newColor = "green"
-        elif time_since_last_heartbeat < 10:
+        elif time_since_last_heartbeat < 15:
             newColor = "yellow"
         else:
             newColor = "red"
@@ -294,6 +295,7 @@ class GadgetStatus:
 
     def update_row_status(self, new_status):
         self.gadget_status_text.config({"text": new_status})
+        self.last_gadget_status = new_status
 
     def update_hw_info(self, ip_addr, compile_date, compile_time):
         self.gadget_ip = ip_addr

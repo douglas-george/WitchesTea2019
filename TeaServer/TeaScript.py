@@ -6,7 +6,7 @@ attendees = ["Dennis", "Delta",
              "Joe", "Barbara", "Carl",
              "Alice", "Jeff", "Braeden", "Carter", "Tanner", "Coleman", "Brynlee",
              "Sam", "Erin", "Sariah", "Emma", "Hyrum",
-             "Sitter1", "Sitter2"]
+             "Sitter1"]
 
 
 game_states = ( ("SETTING_UP", "No one here yet..."),
@@ -37,7 +37,7 @@ game_states = ( ("SETTING_UP", "No one here yet..."),
                 ("EAT_TOAD", "Isaac eats toad"),
                 ("REGINA_SUGGESTS_KOUING_AMAN", "'Wonderful! Thank you to our brave helper! Next we need something that has Baneberry in it! Find some and eat it quick!'"),
                 ("EAT_KOUING_AMAN", "Everyone eats Kouing Aman"),
-                ("REGINA_SUGGESTS_POPCORN", "'I hope your copies of Witch Weekly are helping you narrow things down! Next I would eat something that has Korklump Juice in it!'"),
+                ("REGINA_SUGGESTS_POPCORN", "'I hope your copies of Witch Weekly are helping you narrow things down! Next I would eat something that has Horklump Juice in it!'"),
                 ("EAT_POPCORN", "Eat Pop Rocks Dessert"),
                 ("REGINA_SUGGESTS_COCKROACH_CLUSTERS", "'Next you should find something that has Pearl Dust in it! But don't eat it yet!'"),
                 ("REGINA_EXPLAINS_RISUS_MAGNA", "'It looks like there isn't enough for everyone - I think the first people to master the 'RISUS MAGNA' spell should eat it' Everyone try to cast 'RISUS MAGNA'"),

@@ -1,7 +1,7 @@
 #include "SPIFFS.h"
 
 
-#define WAND_OWNER_TO_WRITE "Delta"
+#define WAND_OWNER_TO_WRITE "Alexis"
 
 #define UPDATE_STORED_WAND_OWNER 0
 

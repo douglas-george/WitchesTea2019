@@ -103,6 +103,28 @@ class WandListener(ServerListenerLink):
         return None
 
 
+class ClickerListener(ServerListenerLink):
+    CLICKER_PORT = 10111
+
+    def __init__(self):
+        super().__init__(gadget_port=self.CLICKER_PORT)
+
+    def service_clicker(self):
+        results = self.service_server()
+
+        if results is not None:
+            msg, sender_ip = results
+            if (msg.data["MESSAGE_TYPE"] == "GADGET_HEARTBEAT"):
+                return (msg.data["MESSAGE_ID"].strip(),
+                        msg.data["GADGET_ID"].strip(),
+                        msg.data["GADGET_STATE"].strip(),
+                        msg.data["COMPILE_DATE"].strip(),
+                        msg.data["COMPILE_TIME"].strip(),
+                        sender_ip)
+
+        return None
+
+
 if __name__ == "__main__":
     server = ServerListenerLink(hostIP="192.168.5.177", hostPort=10101)
 
