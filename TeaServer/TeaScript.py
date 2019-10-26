@@ -6,7 +6,7 @@ attendees = ["Dennis", "Delta",
              "Joe", "Barbara", "Carl",
              "Alice", "Jeff", "Braeden", "Carter", "Tanner", "Coleman", "Brynlee",
              "Sam", "Erin", "Sariah", "Emma", "Hyrum",
-             "Sitter1"]
+             "Sitter1", "Sitter2"]
 
 
 game_states = ( ("SETTING_UP", "No one here yet...\n\n(PRESS BUTTON AFTER DINNER, WHEN READY FOR REGINA TO ARRIVE)"),
