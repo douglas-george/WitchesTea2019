@@ -83,6 +83,8 @@ int motionCheckPeriod = 1100;
 bool fotaInProgress = false;
 int timeOfLastFotaActivity;
 
+int heartbeatRate = 1000;
+
 
 void setup()
 {

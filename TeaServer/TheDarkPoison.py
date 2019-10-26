@@ -25,6 +25,12 @@ class TheDarkPoison:
 
         self.current_audio_clips_state = None
 
+        self.num_wands_lit = 0
+
+        self.last_wand_status = {}
+        for attendee in attendees:
+            self.last_wand_status[attendee] = ""
+
         mixer.init()
 
     def run(self):
@@ -64,6 +70,12 @@ class TheDarkPoison:
         if wand_data is not None:
             message_id, wand_id, wand_state, compile_date, compile_time, sender_ip = wand_data
             self.gui.update_wand_status(message_id, wand_id, wand_state, compile_date, compile_time, sender_ip)
+            self.last_wand_status[wand_id] = wand_state
+
+        self.num_wands_lit = 0
+        for wand_id in self.last_wand_status:
+            if self.last_wand_status[wand_id] == "LIT":
+                self.num_wands_lit += 1
 
         clicker_data = self.clicker_listener.service_clicker()
         if clicker_data is not None:
@@ -83,36 +95,43 @@ class TheDarkPoison:
             return
 
         if self.current_state != self.current_audio_clips_state:
-            print("stopping audio clip prematurely")
             mixer.music.stop()
             self.current_audio_clips_state = None
 
     def service_current_state(self):
         if self.current_state == "SETTING_UP":
             if self.last_initialized_state != self.current_state:
-                self.last_initialized_state = self.current_state
-
-            if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                    pass
+                else:
+                    self.last_initialized_state = self.current_state
+            elif self.gui.ClickerStatus.last_gadget_status == "PROCEED":
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "FAMILY_PICTURES":
             if self.last_initialized_state != self.current_state:
-                self.last_initialized_state = self.current_state
-
-            if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                    pass
+                else:
+                    self.last_initialized_state = self.current_state
+            elif self.gui.ClickerStatus.last_gadget_status == "PROCEED":
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "GROUP_PICTURES":
             if self.last_initialized_state != self.current_state:
-                self.last_initialized_state = self.current_state
-
-            if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                    pass
+                else:
+                    self.last_initialized_state = self.current_state
+            elif self.gui.ClickerStatus.last_gadget_status == "PROCEED":
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINA_ARRIVES":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
-                #TODO: play stuck in fireplace noises...
+                self.start_new_audio_clip(clipPath='./audioClips/bangingNoisesInFireplace.mp3')
+            elif not mixer.music.get_busy():
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINA_EXPLAINS":
             if self.last_initialized_state != self.current_state:
@@ -132,7 +151,7 @@ class TheDarkPoison:
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
                 self.warmup_time = time.time()
-            elif time.time() > (self.warmup_time + 360):
+            elif time.time() > (self.warmup_time + 300):
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "FOGGER_COUNTDOWN":
@@ -143,9 +162,15 @@ class TheDarkPoison:
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
 
+            if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
+
         elif self.current_state == "EVIL_ANNOUNCEMENT":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+                self.start_new_audio_clip(clipPath='./audioClips/evilAnnouncement.mp3')
+            elif not mixer.music.get_busy():
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "CAST_PROHIBERE":
             if self.last_initialized_state != self.current_state:
@@ -159,10 +184,16 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_PROHIBERE":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+                self.time_state_started = time.time()
+            elif (self.num_wands_lit > 15) or (time.time() > (self.time_state_started + 20)):
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "FOGGER_OFF":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+                self.time_state_started = time.time()
+            elif time.time() > (self.time_state_started + 5):
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINAS_PLAN":
             if self.last_initialized_state != self.current_state:
@@ -195,8 +226,7 @@ class TheDarkPoison:
         elif self.current_state == "REGINA_SUGGESTS_PUMPKIN_CAKE":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
-                self.start_new_audio_clip(clipPath='./audioClips/WitchWeeklyJustHadAnArticle.mp3')
-            elif not mixer.music.get_busy():
+            else:
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "EATING_PUMPKIN_CAKE":
@@ -210,7 +240,7 @@ class TheDarkPoison:
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
                 self.start_new_audio_clip(clipPath='./audioClips/TastedGoodAnyoneViolentlyIll.mp3')
-            elif not mixer.music.get_busy():
+            elif (not mixer.music.get_busy()) and (self.gui.ClickerStatus.last_gadget_status == "PROCEED"):
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINA_ASKS_IF_YOU_HAVE_DESERT_TOAD":
@@ -245,12 +275,14 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_FORTISSIMI":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+            elif self.last_wand_status["Isaac"] == "LIT":
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "EAT_TOAD":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
-
-            if self.gui.ClickerStatus.last_gadget_status == "PROCEED":
+                self.start_new_audio_clip(clipPath='./audioClips/eatIt.mp3')
+            elif (not mixer.music.get_busy()) and (self.gui.ClickerStatus.last_gadget_status == "PROCEED"):
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINA_SUGGESTS_KOUING_AMAN":
@@ -285,7 +317,7 @@ class TheDarkPoison:
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
                 self.start_new_audio_clip(clipPath='./audioClips/FindPearlDustDontEatItYet.mp3')
-            elif not mixer.music.get_busy():
+            elif (not mixer.music.get_busy()) and (self.gui.ClickerStatus.last_gadget_status == "PROCEED"):
                 self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "REGINA_EXPLAINS_RISUS_MAGNA":
@@ -306,6 +338,22 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_RISUS_MAGNA":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+
+            else:
+                num_randalls_lit = 0
+                if self.last_wand_status["Sam"] == "LIT":
+                    num_randalls_lit += 1
+                if self.last_wand_status["Erin"] == "LIT":
+                    num_randalls_lit += 1
+                if self.last_wand_status["Sariah"] == "LIT":
+                    num_randalls_lit += 1
+                if self.last_wand_status["Emma"] == "LIT":
+                    num_randalls_lit += 1
+                if self.last_wand_status["Hyrum"] == "LIT":
+                    num_randalls_lit += 1
+
+                if num_randalls_lit >= 3:
+                    self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "HYSTERICAL_LAUGHING":
             if self.last_initialized_state != self.current_state:
@@ -332,6 +380,9 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_LINGUA_GUSTARE":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+                self.time_state_started = time.time()
+            elif (self.num_wands_lit > 15) or (time.time() > (self.time_state_started + 20)):
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "EAT_CAULDRON_CAKES":
             if self.last_initialized_state != self.current_state:
@@ -372,6 +423,8 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_CANTATA_CANTICUM":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+            elif (self.last_wand_status["Amber"] == "LIT") and (self.last_wand_status["Alexis"] == "LIT"):
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "EAT_CHOCOLATE_KEYS":
             if self.last_initialized_state != self.current_state:
@@ -405,6 +458,9 @@ class TheDarkPoison:
         elif self.current_state == "WAIT_ON_DENTIS_FORTIS":
             if self.last_initialized_state != self.current_state:
                 self.last_initialized_state = self.current_state
+                self.time_state_started = time.time()
+            elif (self.num_wands_lit > 15) or (time.time() > (self.time_state_started + 20)):
+                self.gui.update_current_state(index_of_new_state=self.gui.index_of_current_state + 1)
 
         elif self.current_state == "EAT_GOLD_ROCKS":
             if self.last_initialized_state != self.current_state:

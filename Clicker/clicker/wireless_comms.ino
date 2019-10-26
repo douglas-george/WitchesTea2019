@@ -10,7 +10,7 @@ const char* ANNOUNCEMENT_BCAST_ADDR = "192.168.5.255";
 const int ANNOUNCEMENT_PORT = 10103;
 
 const char* GADGET_BCAST_ADDR = "192.168.5.255";
-const int WAND_PORT = 10109;
+const int WAND_PORT = 10111;
 
 WiFiUDP outgoing_udp;
 WiFiUDP incoming_udp;
@@ -19,12 +19,13 @@ WiFiUDP incoming_udp;
 unsigned long timeOfLastHeartbeatTx = 0;
 
 
+
+
+
 void InitComms(void)
 {
   Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
-
-  InitFOTA();
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -157,7 +158,6 @@ void SendHeartbeatIfNeeded(void)
 
   if (currentTime > (timeOfLastHeartbeatTx + heartbeatRate))
   {
-    
     SendHeartbeat();
   }
 }
@@ -194,7 +194,7 @@ void FormHeartbeat(String& heartbeat)
   heartbeat = String(heartbeat + "\t<MESSAGE_TYPE>GADGET_HEARTBEAT</MESSAGE_TYPE>\n\r");
   
   heartbeat = String(heartbeat + "\t<GADGET_ID>");
-  subString = String(storedWandOwner);
+  subString = String("CLICKER");
   heartbeat = String(heartbeat + subString);
   heartbeat = String(heartbeat + "\t</GADGET_ID>\n\r");
 
@@ -204,7 +204,7 @@ void FormHeartbeat(String& heartbeat)
   heartbeat = String(heartbeat + "\t</MESSAGE_ID>\n\r");
 
   heartbeat = String(heartbeat + "\t<GADGET_STATE>");
-  subString = String(currentStateString);
+  subString = currentStatus;
   heartbeat = String(heartbeat + subString);
   heartbeat = String(heartbeat + "\t</GADGET_STATE>\n\r");
 

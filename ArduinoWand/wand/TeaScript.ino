@@ -5,12 +5,17 @@ void ServiceCurrentState(void)
   switch(currentState)
   {
     case UNKNOWN_GAME_STATE:
+      heartbeatRate = 10000;
       ServiceUnknownState();
       break;
       
     case SETTING_UP:
     case FAMILY_PICTURES:
     case GROUP_PICTURES:
+      heartbeatRate = 10000;
+      ServiceWandIdle(true);
+      break;
+    
     case REGINA_ARRIVES:
     case REGINA_EXPLAINS:
     case DINNER:
@@ -18,7 +23,6 @@ void ServiceCurrentState(void)
     case FOGGER_COUNTDOWN:
     case POISONING:
     case EVIL_ANNOUNCEMENT:
-    case FOGGER_OFF:
     case REGINAS_PLAN:
     case SPELL_BOOKS_APPEAR:
     case PASS_OUT_BOOKS:
@@ -29,25 +33,31 @@ void ServiceCurrentState(void)
     case REGINA_ASKS_IF_YOU_HAVE_DESERT_TOAD:
     case WAIT_TO_FIND_TOAD:
     case REGINA_SAYS_THE_BRAVEST_MUST_EAT_IT:
-    case EAT_TOAD:
     case REGINA_SUGGESTS_KOUING_AMAN:
     case EAT_KOUING_AMAN:
     case REGINA_SUGGESTS_POPCORN:
     case EAT_POPCORN:
     case REGINA_SUGGESTS_COCKROACH_CLUSTERS:
     case REGINA_EXPLAINS_RISUS_MAGNA:
-    case HYSTERICAL_LAUGHING:
     case REGINA_EXPLAINS_LINGUA_GUSTARE:
-    case EAT_CAULDRON_CAKES:
     case REGINA_SAYS_FIND_DRAGONFLY_THORAX:
     case FINDING_DRAGONFLY_THORAX:
     case NOT_ENOUGH_NEED_THE_BEST_CANTANTA_CANTICUM_SPELL:
-    case EAT_CHOCOLATE_KEYS:
     case PEDERSENS_SING:
     case REGINA_DEPARTS_IN_A_RUSH_SAYS_USE_DENTIS_FORTIS:
-    case EAT_GOLD_ROCKS:
     case CRAFT_CURE:
-      ServiceWandIdle();
+      heartbeatRate = 5000;
+      ServiceWandIdle(true);
+      break;
+
+    case EAT_TOAD:
+    case HYSTERICAL_LAUGHING:
+    case EAT_CAULDRON_CAKES:
+    case EAT_CHOCOLATE_KEYS:
+    case EAT_GOLD_ROCKS:
+    case FOGGER_OFF:
+      heartbeatRate = 5000;
+      ServiceWandIdle(false);
       break;
 
     case CAST_PROHIBERE:
@@ -57,6 +67,8 @@ void ServiceCurrentState(void)
     case CAST_LINGUA_GUSTARE:
     case CAST_CANTATA_CANTICUM:
     case CAST_DENTIS_FORTIS:
+      heartbeatRate = 500;
+      currentStateString = "PREPARING";
       ServiceBuzzSequence(false);
       break;
 
@@ -67,8 +79,24 @@ void ServiceCurrentState(void)
     case WAIT_ON_LINGUA_GUSTARE:
     case WAIT_ON_CANTATA_CANTICUM:
     case WAIT_ON_DENTIS_FORTIS:
-      ServiceBuzzSequence(ServiceSpell());
+    {
+      bool spellHasBeenCast = ServiceSpell();
+      
+      heartbeatRate = 500;
+      
+      ServiceBuzzSequence(spellHasBeenCast);
+
+      if (spellHasBeenCast)
+      {
+        currentStateString = "LIT";
+      }
+      else
+      {
+        currentStateString = "STILL_TRYING";
+      }
+      
       break;
+    }
   }
 }
 
@@ -90,7 +118,7 @@ void ServiceUnknownState(void)
 }
 
 
-void ServiceWandIdle(void)
+void ServiceWandIdle(bool turnOffLed)
 {
   if (stateChanged)
   {
@@ -98,7 +126,11 @@ void ServiceWandIdle(void)
     Serial.println(currentStateString);
     stateChanged = false;
 
-    SetLedColor(0, 0, 0);
+    if (turnOffLed)
+    {
+      SetLedColor(0, 0, 0);
+    }
+    
     SetBuzzer(2, false);
     SetBuzzer(3, false);
     startWandMotionSampling = false;
@@ -202,19 +234,19 @@ bool ServiceSpell(void)
     {
       spellComplete = true;
     }
-    else if ((timeInState > 15000) && (movementPercentage > 0.30))
+    else if ((timeInState > 15000) && (movementPercentage > 0.20))
     {
       spellComplete = true;
     }
-    else if ((timeInState > 10000) && (movementPercentage > 0.40))
+    else if ((timeInState > 10000) && (movementPercentage > 0.30))
     {
       spellComplete = true;
     }
-    else if ((timeInState > 7500) && (movementPercentage > 0.50))
+    else if ((timeInState > 7500) && (movementPercentage > 0.40))
     {
       spellComplete = true;
     }
-    else if (movementPercentage > 0.60)
+    else if (movementPercentage > 0.50)
     {
       spellComplete = true;
     }
